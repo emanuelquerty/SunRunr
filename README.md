@@ -9,3 +9,9 @@ SunRunr Project Overview
 - A third party weather service should further be used to track the temperature and humidity during each fitness activity.  
   When the activity is stopped, the collected activity is transmitted to a web server that maintains the history of each activity for the user.
 - The SunRunr web application will also allow the user to monitor their fitness activities, UV exposure, and calories burned. The web application should use responsive design to allow users to view the web application on mobile devices.
+
+Database:
+
+- The app uses mongodb database.
+
+- To run the app, first create a jwtSecretKey.txt with a random key for json web token (JWT) in a director above the app's directory. Then you can run the app on your local machine!
