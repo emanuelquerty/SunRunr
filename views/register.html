@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>User Registration</title>
+    <link href="/stylesheets/register.css" rel="stylesheet">
+    <!-- <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootswatch/4.3.1/darkly/bootstrap.min.css"> -->
+    <script src="/javascripts/register.js" defer></script>
+</head>
+
+<body>
+    <div class="form">
+        <p class="form-title">Register a new account</p>
+        <label for="deviceId">Device ID</label>
+        <input type="text" id="deviceId">
+
+        <label for="email">Email</label>
+        <input type="email" id="email">
+
+        <label for="password">Password</label>
+        <input type="password" id="password">
+
+
+        <label for="passwordConfirm">Confirm Password</label>
+        <input type="password" id="passwordConfirm">
+
+        <div id="formErrors"></div>
+
+        <input type="submit" id="submit" value="Sign up">
+        <p id="already-registered">Already registered? <a href="/users/login">Log in</a></p>
+    </div>
+</body>
+
+</html>

@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Login</title>
+    <link href="/stylesheets/login.css" rel="stylesheet">
+    <!-- <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootswatch/4.3.1/darkly/bootstrap.min.css"> -->
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"
+        integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+    <script src="/javascripts/login.js" defer></script>
+</head>
+
+<body>
+    <div class="form">
+        <p class="form-title">Log in to SunRunr</p>
+
+        <label for="email">Email</label>
+        <input type="email" id="email">
+
+        <label for="password">Password</label>
+        <input type="password" id="password">
+
+        <div id="formErrors"></div>
+
+        <input type="submit" id="submit" value="Log in">
+        <p id="already-registered">New to SunRunr? <a href="/users/register">Register a new account.</a></p>
+    </div>
+
+</body>
+
+</html>
