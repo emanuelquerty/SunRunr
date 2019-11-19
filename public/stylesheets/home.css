@@ -1,0 +1,54 @@
+body {
+  background-color: #f0f4c3;
+}
+
+nav {
+  background: #f1c40f;
+}
+
+a {
+  color: #222 !important;
+}
+
+.brand-logo {
+  margin-left: 2rem;
+}
+
+main {
+  padding: 4rem;
+}
+
+.left-panel {
+  background: #f1c40f;
+  height: 40vh;
+  padding: 1rem !important;
+}
+
+i {
+  vertical-align: middle;
+  margin-right: 0.8rem;
+}
+
+.home-icon {
+  font-size: 2rem;
+}
+
+.left-panel-link {
+  font-size: 1.2rem;
+  font-weight: bold;
+  padding: 1rem;
+}
+
+.left-panel a {
+  display: block;
+  margin-top: 0rem;
+}
+
+.left-panel a:hover {
+  background: #dab10d;
+}
+
+#welcome-username-btn {
+  color: #000 !important;
+  font-weight: bold;
+}

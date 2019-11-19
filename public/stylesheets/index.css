@@ -1,0 +1,86 @@
+* {
+  font-family: Arial, Helvetica, sans-serif;
+  margin: 0;
+  padding: 0;
+  box-sizing: inherit;
+}
+
+html {
+  font-size: 62.5%;
+}
+
+body {
+  /* background-color: #222; */
+  /* background: linear-gradient(
+        to right bottom,
+        #f1c40f9c,
+        rgba(255, 255, 0, 0.452)
+      )
+      fixed,
+    url("/images/landscape.jpg");
+  background-repeat: no-repeat;
+  background-position: top;
+  background-size: cover; */
+
+  padding: 0 0 3rem 0;
+  box-sizing: border-box; /* Border and Padding won't be added to total width and height of an element*/
+}
+
+#container {
+  background: linear-gradient(
+        to right bottom,
+        rgba(0, 0, 0, 0.801),
+        rgba(0, 0, 0, 0.801)
+      )
+      fixed,
+    url("/images/man-running.jpg");
+  background-repeat: no-repeat;
+  background-position: top;
+  background-size: cover;
+
+  height: 100vh;
+  background-color: #222;
+  /* clip-path: polygon(0 0, 100% 0, 100% 80%, 0 100%); */
+  padding: 1px;
+}
+
+#container__text-box {
+  width: 43rem;
+  margin: 0 auto;
+  margin-top: 12rem;
+}
+
+#container__text-box h1 {
+  font-weight: 300;
+  color: #f1c40f;
+  color: #fff;
+  font-size: 5rem;
+  letter-spacing: 3rem;
+  margin-bottom: 2rem;
+}
+
+p {
+  color: #aaa;
+  font-size: 1.6rem;
+  line-height: 2.6rem;
+  margin-bottom: 6rem;
+}
+
+#login-button,
+#signup-button {
+  display: block;
+  background-color: #f1c40f;
+  padding: 1rem 2rem;
+  margin-bottom: 2.2rem;
+  text-decoration: none;
+  color: #444;
+  text-align: center;
+  /* border-radius: 2rem; */
+  font-size: 1.5rem;
+}
+
+#login-button:hover,
+#signup-button:hover {
+  background-color: #ddb411;
+  color: #000;
+}

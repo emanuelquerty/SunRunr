@@ -3,6 +3,7 @@ let fs = require("fs");
 let path = require("path");
 let router = express.Router();
 let UserModel = require("../models/users");
+let DeviceModel = require("../models/devices");
 let bcrypt = require("bcryptjs");
 let jwt = require("jwt-simple");
 
@@ -96,11 +97,11 @@ router.post("/login", function(req, res) {
             });
           } else {
             if (valid === true) {
-              var secret = fs
+              let secret = fs
                 .readFileSync(__dirname + "/../../jwtSecretkey.txt")
                 .toString();
 
-              var authToken = jwt.encode({ email: req.body.email }, secret);
+              let authToken = jwt.encode({ email: req.body.email }, secret);
               res.status(201).json({ success: true, authToken: authToken });
             } else {
               res.status(201).json({
@@ -112,6 +113,61 @@ router.post("/login", function(req, res) {
         });
       }
     });
+  }
+});
+
+// Get a user information given an authToken
+router.get("/read", function(req, res) {
+  // Check for authentication token in x-auth header
+  if (!req.headers["x-auth"]) {
+    return res
+      .status(401)
+      .json({ success: false, message: "No authentication token" });
+  }
+
+  // Authenticatin token is set
+  var authToken = req.headers["x-auth"];
+
+  try {
+    let secret = fs
+      .readFileSync(__dirname + "/../../jwtSecretkey.txt")
+      .toString();
+    let decodedToken = jwt.decode(authToken, secret);
+    let userStatus = {};
+
+    UserModel.findOne({ email: decodedToken.email }, function(err, user) {
+      if (err) {
+        return res
+          .status(200)
+          .json({ success: false, message: "User does not exist." });
+      } else {
+        userStatus["success"] = true;
+        userStatus["email"] = user.email;
+
+        // Find devices based on decoded token
+        DeviceModel.find({ userEmail: decodedToken.email }, function(
+          err,
+          devices
+        ) {
+          if (!err) {
+            // Construct device list
+            let deviceList = [];
+            for (device of devices) {
+              deviceList.push({
+                deviceId: device.deviceId
+              });
+            }
+            userStatus["devices"] = deviceList;
+          }
+
+          return res.status(200).json(userStatus);
+        });
+      }
+    });
+  } catch (ex) {
+    return res
+      .status(401)
+      .json({ success: false, message: "Invalid authentication token." });
   }
 });
 

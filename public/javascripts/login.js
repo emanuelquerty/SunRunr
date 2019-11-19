@@ -5,23 +5,28 @@ var formErrors = document.querySelector("#formErrors");
 var re = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,5}$/;
 
 submit.addEventListener("click", validateInput);
+password.addEventListener("keypress", function(event) {
+  if (event.which === 13) {
+    validateInput(event);
+  }
+});
 
 function validateInput(event) {
   var errors = [];
   formErrors.innerHTML = "";
 
   // Rest all fields to initial border style
-  email.style.border = "1px solid #aaa";
-  password.style.border = "1px solid #aaa";
+  email.style.borderBottom = "4px solid #00c853";
+  password.style.borderBottom = "4px solid #00c853";
 
   if (!re.test(email.value)) {
     errors.push("Invalid or missing email address.");
-    email.style.border = "2px solid red";
+    email.style.borderBottom = "4px solid #d35400";
   }
 
   if (password.value.length == 0) {
     errors.push("Invalid or missing password");
-    password.style.border = "2px solid red";
+    password.style.borderBottom = "4px solid #d35400";
   }
 
   if (errors.length > 0) {
@@ -59,6 +64,12 @@ function loginSuccess(data, textStatus, jqXHR) {
   if (data.success) {
     // window.location = "/home";
     console.log(data);
+
+    // Store Token
+    window.localStorage.setItem("authToken", data.authToken);
+
+    // Redirect user to account page
+    window.location = "/home";
   } else {
     let errors = [];
     errors.push(data.msg);

@@ -3,6 +3,10 @@
   font-family: Arial, Helvetica, sans-serif;
 }
 
+body {
+  background-color: #222;
+}
+
 .form-title {
   font-weight: bold;
   margin-bottom: 0;
@@ -15,17 +19,30 @@
 }
 
 .errors {
-  color: red;
+  color: #d35400;
 }
 
 input[type="text"],
 input[type="email"],
 input[type="password"] {
-  border: 1px solid #aaa;
+  border: none;
   display: block;
   width: 100%;
   padding: 10px;
   font-size: 16px;
+  margin-bottom: 10px;
+  border-bottom: 4px solid #888;
+  border-bottom-left-radius: 10px;
+  border-bottom-right-radius: 10px;
+}
+
+input[type="text"]:focus,
+input[type="email"]:focus,
+input[type="password"]:focus {
+  outline: none;
+  border-bottom: 4px solid #00c853;
+  border-bottom-left-radius: 10px;
+  border-bottom-right-radius: 10px;
 }
 
 input[type="submit"] {
@@ -36,19 +53,25 @@ input[type="submit"] {
   background-color: #d35400;
   border: none;
   color: #fff;
+  font-size: 13pt;
 }
 
 label {
   display: inline-block;
   font-size: 9.5pt;
   margin-top: 16px;
+  background: #fff;
+  width: 100%;
+  padding: 5px;
+  color: #444;
+  font-weight: bold;
 }
 
 .form {
-  width: 30%;
+  width: 42%;
   background: #f1c40f;
-  padding: 14px;
-  margin: 10% auto;
+  padding: 20px 20px 50px 20px;
+  margin: 6% auto;
 }
 #already-registered {
   font-size: 10pt;
