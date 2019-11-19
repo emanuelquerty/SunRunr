@@ -15,13 +15,12 @@ a {
 }
 
 main {
-  padding: 4rem;
+  padding: 2rem;
 }
 
 .left-panel {
   background: #f1c40f;
-  height: 40vh;
-  padding: 1rem !important;
+  padding: 2rem 1rem 1rem 1rem !important;
 }
 
 i {
@@ -39,6 +38,12 @@ i {
   padding: 1rem;
 }
 
+.sun {
+  font-size: 10rem;
+  margin-bottom: 2rem;
+  text-align: center;
+}
+
 .left-panel a {
   display: block;
   margin-top: 0rem;
@@ -51,4 +56,17 @@ i {
 #welcome-username-btn {
   color: #000 !important;
   font-weight: bold;
+}
+
+.right-panel {
+  background: #f1c40f;
+  padding: 1rem !important;
+  margin-left: 2rem !important;
+  /* border-left: 1px solid #cca715; */
+  padding: 2px;
+  height: 83vh;
+}
+
+.sidenav {
+  padding-top: 2rem;
 }

@@ -1,6 +1,6 @@
-// $(document).ready(function() {
-//   $(".sidenav").sidenav();
-// });
+$(document).ready(function() {
+  $(".sidenav").sidenav();
+});
 
 if (!window.localStorage.getItem("authToken")) {
   // Redirect user to account.html page
@@ -15,7 +15,7 @@ $(function() {
   }
 
   // Handle logout
-  $("#logout-btn").click(function() {
+  $(".logout-btn").click(function() {
     // alert("hello");
     window.localStorage.removeItem("authToken");
     window.location.replace("/");
