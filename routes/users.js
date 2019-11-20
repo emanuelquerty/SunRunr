@@ -4,6 +4,7 @@ let path = require("path");
 let router = express.Router();
 let UserModel = require("../models/users");
 let DeviceModel = require("../models/devices");
+let activityModel = require("../models/activities");
 let bcrypt = require("bcryptjs");
 let jwt = require("jwt-simple");
 
@@ -168,6 +169,48 @@ router.get("/read", function(req, res) {
     return res
       .status(401)
       .json({ success: false, message: "Invalid authentication token." });
+  }
+});
+
+router.post("/activity/create", function(req, res, next) {
+  let data = req.json();
+
+  if (
+    data.hasOwnProperty("longitude") &&
+    data.hasOwnProperty("latitude") &&
+    data.hasOwnProperty("GPS_speed") &&
+    data.hasOwnProperty("uv") &&
+    data.hasOwnProperty("deviceID")
+  ) {
+    DeviceModel.findOne({ deviceID: data.deviceID })
+      .then(deviceID => {
+        let newActivity = new activityModel({
+          longitude: data.longitude,
+          latitude: data.latitude,
+          GPS_speed: data.GPS_speed,
+          uv: data.uv
+        });
+
+        newActivity
+          .save()
+          .then(activity => {
+            res
+              .status(201)
+              .json({ success: true, msg: "Activity Successfully saved!" });
+          })
+          .catch(error => {
+            res.status(500).json({
+              success: false,
+              msg: "Could not save the activity. Please contact support."
+            });
+          });
+      })
+      .catch(error => {
+        res.status(401).json({
+          success: false,
+          msg: "Unauthorized operation. Device is not registered."
+        });
+      });
   }
 });
 
