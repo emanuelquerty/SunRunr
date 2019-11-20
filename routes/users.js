@@ -99,7 +99,9 @@ router.post("/login", function(req, res) {
           } else {
             if (valid === true) {
               let secret = fs
-                .readFileSync(__dirname + "/../../jwtSecretkey.txt")
+                .readFileSync(
+                  path.join(__dirname, "..", "..", "jwtSecretkey.txt")
+                )
                 .toString();
 
               let authToken = jwt.encode({ email: req.body.email }, secret);
@@ -131,7 +133,7 @@ router.get("/read", function(req, res) {
 
   try {
     let secret = fs
-      .readFileSync(__dirname + "/../../jwtSecretkey.txt")
+      .readFileSync(path.join(__dirname, "..", "..", "jwtSecretkey.txt"))
       .toString();
     let decodedToken = jwt.decode(authToken, secret);
     let userStatus = {};
