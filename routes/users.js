@@ -186,9 +186,9 @@ router.post("/activity/create", function(req, res, next) {
     data.hasOwnProperty("deviceId")
   ) {
     DeviceModel.findOne({ deviceID: data.deviceId })
-      .then(deviceId => {
+      .then(device => {
         let newActivity = new activityModel({
-          deviceID: deviceId,
+          deviceID: device.deviceID,
           longitude: data.lon,
           latitude: data.lat,
           GPS_speed: data.GPS_speed,
