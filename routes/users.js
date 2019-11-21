@@ -175,9 +175,8 @@ router.get("/read", function(req, res) {
 });
 
 router.post("/activity/create", function(req, res, next) {
-  let data = req.json();
+  let data = req.body;
   console.log(data);
-  console.log(req.body);
 
   if (
     data.hasOwnProperty("longitude") &&
