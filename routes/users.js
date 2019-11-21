@@ -179,15 +179,16 @@ router.post("/activity/create", function(req, res, next) {
   console.log(data);
 
   if (
-    data.hasOwnProperty("longitude") &&
-    data.hasOwnProperty("latitude") &&
+    data.hasOwnProperty("lon") &&
+    data.hasOwnProperty("lat") &&
     data.hasOwnProperty("GPS_speed") &&
     data.hasOwnProperty("uv") &&
-    data.hasOwnProperty("deviceID")
+    data.hasOwnProperty("deviceId")
   ) {
-    DeviceModel.findOne({ deviceID: data.deviceID })
-      .then(deviceID => {
+    DeviceModel.findOne({ deviceID: data.deviceId })
+      .then(deviceId => {
         let newActivity = new activityModel({
+          deviceID: deviceId,
           longitude: data.longitude,
           latitude: data.latitude,
           GPS_speed: data.GPS_speed,
@@ -214,6 +215,12 @@ router.post("/activity/create", function(req, res, next) {
           msg: "Unauthorized operation. Device is not registered."
         });
       });
+  } else {
+    res.status(400).json({
+      success: false,
+      msg:
+        "Bad format. Check your json object fields for missing or incorrectly named properties."
+    });
   }
 });
 
