@@ -20,7 +20,7 @@ main {
 
 .left-panel {
   background: #f1c40f;
-  padding: 2rem 1rem 1rem 1rem !important;
+  padding: 2rem !important;
 }
 
 i {
@@ -46,7 +46,6 @@ i {
 
 .left-panel a {
   display: block;
-  margin-top: 0rem;
 }
 
 .left-panel a:hover {
@@ -62,7 +61,6 @@ i {
   background: #f1c40f;
   padding: 1rem !important;
   margin-left: 2rem !important;
-  /* border-left: 1px solid #cca715; */
   padding: 2px;
   height: 83vh;
 }

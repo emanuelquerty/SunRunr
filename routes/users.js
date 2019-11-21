@@ -38,13 +38,13 @@ router.post("/register", function(req, res, next) {
           }
 
           // Store hashed password in database.
-          let User = new UserModel({
+          let newUser = new UserModel({
             email: req.body.email,
             hashedPassword: hash,
             deviceID: [req.body.deviceID]
           });
 
-          User.save(function(error, User) {
+          newUser.save(function(error, User) {
             // Something happened with the server or database while creating the user
             if (error) {
               return res.json({
@@ -176,6 +176,8 @@ router.get("/read", function(req, res) {
 
 router.post("/activity/create", function(req, res, next) {
   let data = req.json();
+  console.log(data);
+  console.log(req.body);
 
   if (
     data.hasOwnProperty("longitude") &&
