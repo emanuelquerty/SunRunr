@@ -8,6 +8,6 @@ let activitySchema = db.Schema({
   uv: { type: String, require: true }
 });
 
-let activityModel = db.model("ativity", activitySchema);
+let activityModel = db.model("activity", activitySchema);
 
 module.exports = activityModel;
