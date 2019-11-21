@@ -189,8 +189,8 @@ router.post("/activity/create", function(req, res, next) {
       .then(deviceId => {
         let newActivity = new activityModel({
           deviceID: deviceId,
-          longitude: data.longitude,
-          latitude: data.latitude,
+          longitude: data.lon,
+          latitude: data.lat,
           GPS_speed: data.GPS_speed,
           uv: data.uv
         });
@@ -212,7 +212,8 @@ router.post("/activity/create", function(req, res, next) {
       .catch(error => {
         res.status(401).json({
           success: false,
-          msg: "Unauthorized operation. Device is not registered."
+          msg:
+            "Something happened while looking for the device. Please contact support."
         });
       });
   } else {
