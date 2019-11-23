@@ -4,6 +4,16 @@ body {
 
 nav {
   background: #f1c40f;
+  padding-right: 4rem;
+}
+
+#dropdown1 {
+  width: 15rem !important;
+  padding: 0.4rem;
+}
+
+#dropdown1 a {
+  font-size: 0.8rem !important;
 }
 
 a {
@@ -19,8 +29,12 @@ main {
 }
 
 .left-panel {
-  background: #f1c40f;
+  box-shadow: 0.01rem 0.01rem 0.2rem 0rem #999;
   padding: 2rem !important;
+}
+
+.left-panel .app_icon {
+  background: #f1c40f;
 }
 
 i {
@@ -49,7 +63,7 @@ i {
 }
 
 .left-panel a:hover {
-  background: #dab10d;
+  background: #ecf39f;
 }
 
 #welcome-username-btn {
@@ -58,11 +72,12 @@ i {
 }
 
 .right-panel {
-  background: #f1c40f;
+  box-shadow: 0.05rem 0.05rem 0.1rem 0rem #999;
   padding: 1rem !important;
   margin-left: 2rem !important;
   padding: 2px;
-  height: 83vh;
+  height: 73vh;
+  border: 1px solid #ccc;
 }
 
 .sidenav {

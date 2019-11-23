@@ -1,22 +1,17 @@
+// Activate the sidenav and drop down from materialize
 $(document).ready(function() {
   $(".sidenav").sidenav();
+  $(".dropdown-trigger").dropdown();
 });
 
 if (!window.localStorage.getItem("authToken")) {
-  // Redirect user to account.html page
+  // If authToken does not exists, redirect user to
   window.location.replace("/");
 }
 
 $(function() {
-  // If authToken does not exists, redirect user to
-  if (!window.localStorage.getItem("authToken")) {
-    // Redirect user to account.html page
-    window.location.replace("/");
-  }
-
   // Handle logout
   $(".logout-btn").click(function() {
-    // alert("hello");
     window.localStorage.removeItem("authToken");
     window.location.replace("/");
   });
@@ -25,6 +20,7 @@ $(function() {
   sendReqForAccountInfo();
 });
 
+// Get a user's information to display in home page
 function sendReqForAccountInfo() {
   $.ajax({
     url: "/users/read",
@@ -37,10 +33,8 @@ function sendReqForAccountInfo() {
 }
 
 function accountInfoSuccess(data, textStatus, jqXHR) {
-  console.log(data);
   let email = data.email;
   let username = email.split("@")[0];
-  console.log(username);
 
   $("#welcome-username-btn").html(`Welcome @${username}`);
 }

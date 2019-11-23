@@ -40,7 +40,6 @@ body {
 
   height: 100vh;
   background-color: #222;
-  /* clip-path: polygon(0 0, 100% 0, 100% 80%, 0 100%); */
   padding: 1px;
 }
 

@@ -62,9 +62,6 @@ function validateInput(event) {
 
 function loginSuccess(data, textStatus, jqXHR) {
   if (data.success) {
-    // window.location = "/home";
-    console.log(data);
-
     // Store Token
     window.localStorage.setItem("authToken", data.authToken);
 

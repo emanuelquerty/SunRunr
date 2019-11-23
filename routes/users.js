@@ -17,7 +17,7 @@ router.post("/register", function(req, res, next) {
   if (
     req.body.hasOwnProperty("email") &&
     req.body.hasOwnProperty("password") &&
-    req.body.hasOwnProperty("deviceID")
+    req.body.hasOwnProperty("deviceId")
   ) {
     // Check if there is already an account using the given email
     UserModel.findOne({ email: req.body.email }, function(error, user) {
@@ -41,7 +41,7 @@ router.post("/register", function(req, res, next) {
           let newUser = new UserModel({
             email: req.body.email,
             hashedPassword: hash,
-            deviceID: [req.body.deviceID]
+            deviceID: [req.body.deviceId]
           });
 
           newUser.save(function(error, User) {
@@ -52,6 +52,22 @@ router.post("/register", function(req, res, next) {
                 success: false
               });
             }
+
+            // Now save the device in device collection
+            let newDevice = new DeviceModel({
+              email: req.body.email,
+              deviceID: req.body.deviceId
+            });
+
+            newDevice
+              .save()
+              .then(device => {
+                // User created successfully
+                res.json({ msg: "User has been saved", success: true });
+              })
+              .catch(error => {
+                console.log("could not save new device!");
+              });
 
             // User created successfully
             res.json({ msg: "User has been saved", success: true });
@@ -123,9 +139,7 @@ router.post("/login", function(req, res) {
 router.get("/read", function(req, res) {
   // Check for authentication token in x-auth header
   if (!req.headers["x-auth"]) {
-    return res
-      .status(401)
-      .json({ success: false, message: "No authentication token" });
+    return res.redirect("/");
   }
 
   // Authenticatin token is set
@@ -140,9 +154,10 @@ router.get("/read", function(req, res) {
 
     UserModel.findOne({ email: decodedToken.email }, function(err, user) {
       if (err) {
-        return res
-          .status(200)
-          .json({ success: false, message: "User does not exist." });
+        return res.status(200).json({
+          success: false,
+          message: "Error trying to find user. Please contact support"
+        });
       } else {
         userStatus["success"] = true;
         userStatus["email"] = user.email;
@@ -174,6 +189,8 @@ router.get("/read", function(req, res) {
   }
 });
 
+/*************** Route for creating an activity */
+
 router.post("/activity/create", function(req, res, next) {
   let data = req.body;
   console.log(data);
@@ -188,7 +205,7 @@ router.post("/activity/create", function(req, res, next) {
     DeviceModel.findOne({ deviceID: data.deviceId })
       .then(device => {
         let newActivity = new activityModel({
-          deviceID: device.deviceID,
+          deviceID: device.deviceId,
           longitude: data.lon,
           latitude: data.lat,
           GPS_speed: data.GPS_speed,
@@ -222,6 +239,138 @@ router.post("/activity/create", function(req, res, next) {
       msg:
         "Bad format. Check your json object fields for missing or incorrectly named properties."
     });
+  }
+});
+
+/********************* Route for update a user account information */
+
+router.get("/account/update", function(req, res, next) {
+  res.sendFile(path.join(__dirname, "..", "views", "updateAccount.html"));
+});
+
+router.post("/account/update", function(req, res, next) {
+  // Check for authentication token in x-auth header
+  if (!req.headers["x-auth"]) {
+    return res.redirect("/");
+  }
+  // Authenticatin token is set
+  var authToken = req.headers["x-auth"];
+
+  // If email property is set, we want to update the user's email with the given email
+  if (req.body.hasOwnProperty("email")) {
+    let newEmail = req.body.email;
+
+    try {
+      let secret = fs
+        .readFileSync(path.join(__dirname, "..", "..", "jwtSecretkey.txt"))
+        .toString();
+      let decodedToken = jwt.decode(authToken, secret);
+
+      UserModel.findOneAndUpdate(
+        { email: decodedToken.email },
+        { email: newEmail },
+        { useFindAndModify: false },
+        function(err, user) {
+          if (err) {
+            return res.status(200).json({
+              success: false,
+              message: "Error trying to change email. Please contact support"
+            });
+          } else {
+            // Creae new Token with the new updated email
+            let secret = fs
+              .readFileSync(
+                path.join(__dirname, "..", "..", "jwtSecretkey.txt")
+              )
+              .toString();
+
+            let authToken = jwt.encode({ email: req.body.email }, secret);
+            res.status(201).json({ success: true, authToken: authToken });
+          }
+        }
+      );
+    } catch (ex) {
+      return res
+        .status(401)
+        .json({ success: false, message: "Invalid authentication token." });
+    }
+  } else if (req.body.hasOwnProperty("password")) {
+    let newPassword = req.body.password;
+
+    try {
+      let secret = fs
+        .readFileSync(path.join(__dirname, "..", "..", "jwtSecretkey.txt"))
+        .toString();
+      let decodedToken = jwt.decode(authToken, secret);
+
+      // // Ok to create the user with the given email
+      bcrypt.genSalt(10, function(err, salt) {
+        bcrypt.hash(newPassword, salt, function(err, hash) {
+          if (err) {
+            console.log(
+              "ops ... something happended while trying to hash password"
+            );
+          }
+
+          UserModel.findOneAndUpdate(
+            { email: decodedToken.email },
+            { hashedPassword: hash },
+            { useFindAndModify: false },
+            function(err, user) {
+              if (err) {
+                let msg = {
+                  success: false,
+                  message: "Error trying to change. Please contact support"
+                };
+
+                res.status(201).json(msg);
+              } else {
+                let msg = {
+                  success: true,
+                  message: "Password changed successfully"
+                };
+                res.status(201).json(msg);
+              }
+            }
+          );
+        });
+      }); // bcrypt.genSalt() method ends here
+    } catch (ex) {
+      return res
+        .status(401)
+        .json({ success: false, message: "Invalid authentication token." });
+    }
+  } else if (req.body.hasOwnProperty("deviceId")) {
+    try {
+      let secret = fs
+        .readFileSync(path.join(__dirname, "..", "..", "jwtSecretkey.txt"))
+        .toString();
+      let decodedToken = jwt.decode(authToken, secret);
+      let deviceId = req.body.deviceId;
+
+      let newDevide = new DeviceModel({
+        email: decodedToken.email,
+        deviceID: deviceId
+      });
+
+      newDevide
+        .save()
+        .then(device => {
+          res
+            .status(201)
+            .json({ success: true, msg: "New device Added successfully" });
+        })
+        .catch(error => {
+          console.log("Could not save the device");
+        });
+    } catch (ex) {
+      return res
+        .status(401)
+        .json({ success: false, message: "Invalid authentication token." });
+    }
+
+    let deviceId = req.body.deviceId;
+    console.log(deviceId);
   }
 });
 

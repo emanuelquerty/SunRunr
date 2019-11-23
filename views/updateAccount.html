@@ -22,9 +22,10 @@
 
     <!-- Local CSS -->
     <link href="/stylesheets/home.css" rel="stylesheet" />
+    <link href="/stylesheets/updateAccount.css" rel="stylesheet" />
 
     <!-- Local Javascript -->
-    <script src="/javascripts/home.js" defer></script>
+    <script src="/javascripts/updateAccount.js" defer></script>
     <title>Home</title>
 </head>
 
@@ -121,7 +122,99 @@
                     Readings
                 </a>
             </div>
-            <div class="col s8 right-panel"></div>
+            <div class="col s8 right-panel">
+                <ul id="account-info-collection" class="collection with-header">
+                    <li class="collection-header">
+                        <h5>Account Settings</h5>
+                    </li>
+                    <li class="collection-item">
+                        <div class="wrapper-div">Email<span
+                                class="account-info-span info-update-displayed-email">emanuelinacio@email.arizona.edu</span><a
+                                href="#!" class="secondary-content"><i class="material-icons">send</i></a></div>
+
+                    </li>
+                    <li class="collection-item">
+                        <div class="wrapper-div">Password<span class="account-info-span">Change
+                                Password</span><a href="#!" class="secondary-content"><i
+                                    class="material-icons">send</i></a></div>
+                    </li>
+                    <li class="collection-item">
+                        <div class="wrapper-div">Add a Device<span class="account-info-span">New
+                                Device</span><a href="#!" class="secondary-content"><i
+                                    class="material-icons">send</i></a></div>
+                    </li>
+                    <li class="collection-item collection-item-replace-device">
+                        <div class="wrapper-div">Replace Device<span class="account-info-span">Select
+                                Divice</span><a href="#!" class="secondary-content"><i
+                                    class="material-icons">send</i></a></div>
+                    </li>
+                    <li class="collection-item">
+
+                    </li>
+                </ul>
+
+                <div class="info-update-container email-form">
+                    <div class="row">
+                        <div class="input-field col s12">
+                            <input id="email" type="email" class="validate">
+                            <label for="email" class="active">Enter New Email</label>
+                        </div>
+                    </div>
+
+                    <p class="input-errors input-errors-email"></p>
+
+                    <button class="btn waves-effect waves-light info-update-submit-btn email" type="submit"
+                        name="action">Save
+                        Changes</button>
+                    <a class="waves-effect waves-light btn-small info-update-cancel-btn">Cancel</a>
+                </div>
+
+                <div class="info-update-container password-form">
+                    <div class="row">
+                        <div class="input-field col s12">
+                            <input id="password" type="password" class="validate">
+                            <label for="password" class="active">Enter New Password</label>
+                        </div>
+                    </div>
+
+                    <p class="input-errors input-errors-password"></p>
+
+                    <button class="btn waves-effect waves-light info-update-submit-btn password" type="submit"
+                        name="action">Save
+                        Changes</button>
+                    <a class="waves-effect waves-light btn-small info-update-cancel-btn">Cancel</a>
+                </div>
+
+                <div class="info-update-container add-device-form">
+                    <div class="row">
+                        <div class="input-field col s12">
+                            <input id="add-device" type="text" class="validate">
+                            <label for="add-device" class="active">Enter Device Number</label>
+                        </div>
+                    </div>
+
+                    <p class="input-errors input-errors-add-device"></p>
+
+                    <button class="btn waves-effect waves-light info-update-submit-btn add-device" type="submit"
+                        name="action">Add
+                        Device</button>
+                    <a class="waves-effect waves-light btn-small info-update-cancel-btn">Cancel</a>
+                </div>
+
+                <div class="new-password-update">
+                    <p id="saved-password-state">Password changed successfully!</p>
+                    <p>Logout of all devices?</p>
+
+                    <button class="btn waves-effect waves-light info-update-submit-btn log-me-out-btn" type="submit"
+                        name="action">Log me out</button>
+                    <a class="waves-effect waves-light btn-small keep-me-signed-in-btn">Keep me signed in</a>
+                </div>
+
+                <div class="add-new-device-update">
+                    <p>New Device Added successfully</p>
+                </div>
+
+            </div>
         </div>
     </main>
 </body>

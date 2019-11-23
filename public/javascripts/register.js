@@ -80,7 +80,7 @@ function validateInput(event) {
     ajax.open("POST", "/users/register", true);
     ajax.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
     ajax.send(
-      "deviceID=" +
+      "deviceId=" +
         deviceId.value +
         "&email=" +
         email.value +
