@@ -56,7 +56,7 @@ router.post("/register", function(req, res, next) {
             // Now save the device in device collection
             let newDevice = new DeviceModel({
               email: req.body.email,
-              deviceID: req.body.deviceId
+              deviceId: req.body.deviceId
             });
 
             newDevice
@@ -66,11 +66,9 @@ router.post("/register", function(req, res, next) {
                 res.json({ msg: "User has been saved", success: true });
               })
               .catch(error => {
+                console.log(error);
                 console.log("could not save new device!");
               });
-
-            // User created successfully
-            res.json({ msg: "User has been saved", success: true });
           });
         });
       }); // bcrypt.genSalt() method ends here
@@ -163,17 +161,12 @@ router.get("/read", function(req, res) {
         userStatus["email"] = user.email;
 
         // Find devices based on decoded token
-        DeviceModel.find({ userEmail: decodedToken.email }, function(
-          err,
-          devices
-        ) {
+        DeviceModel.find({ email: decodedToken.email }, function(err, devices) {
           if (!err) {
             // Construct device list
             let deviceList = [];
             for (device of devices) {
-              deviceList.push({
-                deviceId: device.deviceId
-              });
+              deviceList.push(device.deviceId);
             }
             userStatus["devices"] = deviceList;
           }
@@ -244,11 +237,11 @@ router.post("/activity/create", function(req, res, next) {
 
 /********************* Route for update a user account information */
 
-router.get("/account/update", function(req, res, next) {
+router.get("/update", function(req, res, next) {
   res.sendFile(path.join(__dirname, "..", "views", "updateAccount.html"));
 });
 
-router.post("/account/update", function(req, res, next) {
+router.post("/update", function(req, res, next) {
   // Check for authentication token in x-auth header
   if (!req.headers["x-auth"]) {
     return res.redirect("/");
@@ -340,20 +333,23 @@ router.post("/account/update", function(req, res, next) {
         .status(401)
         .json({ success: false, message: "Invalid authentication token." });
     }
-  } else if (req.body.hasOwnProperty("deviceId")) {
+  } else if (
+    req.body.hasOwnProperty("newDeviceId") &&
+    !req.body.hasOwnProperty("oldDeviceId")
+  ) {
     try {
       let secret = fs
         .readFileSync(path.join(__dirname, "..", "..", "jwtSecretkey.txt"))
         .toString();
       let decodedToken = jwt.decode(authToken, secret);
-      let deviceId = req.body.deviceId;
+      let deviceId = req.body.newDeviceId;
 
-      let newDevide = new DeviceModel({
+      let newDevice = new DeviceModel({
         email: decodedToken.email,
-        deviceID: deviceId
+        deviceId: deviceId
       });
 
-      newDevide
+      newDevice
         .save()
         .then(device => {
           res
@@ -368,9 +364,32 @@ router.post("/account/update", function(req, res, next) {
         .status(401)
         .json({ success: false, message: "Invalid authentication token." });
     }
+  } else if (
+    req.body.hasOwnProperty("newDeviceId") &&
+    req.body.hasOwnProperty("oldDeviceId")
+  ) {
+    let newDeviceId = req.body.newDeviceId;
+    let oldDeviceId = req.body.oldDeviceId;
 
-    let deviceId = req.body.deviceId;
-    console.log(deviceId);
+    let secret = fs
+      .readFileSync(path.join(__dirname, "..", "..", "jwtSecretkey.txt"))
+      .toString();
+    let decodedToken = jwt.decode(authToken, secret);
+
+    DeviceModel.findOneAndUpdate(
+      { email: decodedToken.email, deviceId: oldDeviceId },
+      { deviceId: newDeviceId },
+      { useFindAndModify: false }
+    )
+      .then(device => {
+        res.status(201).json({
+          success: true,
+          msg: `Device ${oldDeviceId} replaced with device ${newDeviceId}`
+        });
+      })
+      .catch(error => {
+        console.log(error);
+      });
   }
 });
 

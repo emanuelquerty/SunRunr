@@ -10,10 +10,15 @@ nav {
 #dropdown1 {
   width: 15rem !important;
   padding: 0.4rem;
+  background: #ecf39f;
 }
 
 #dropdown1 a {
   font-size: 0.8rem !important;
+}
+
+#dropdown1 a:hover {
+  background: #e8eb62;
 }
 
 a {

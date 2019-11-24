@@ -90,3 +90,24 @@
   left: 36%;
   display: none;
 }
+
+.replace-device-with-new {
+  width: 32rem;
+  box-shadow: 0.05rem 0.05rem 0.2rem 0.1rem #999;
+  background: #ecf39f;
+  padding: 1.5rem 2rem;
+  position: absolute;
+  left: 24%;
+  top: 20%;
+  display: none;
+}
+
+.replace-device-with-new .replace-device-title {
+  margin-bottom: 2rem;
+  font-size: 1.1rem;
+  font-weight: bold;
+}
+
+.replace-device-with-new .old-device-select {
+  margin: 0 !important;
+}

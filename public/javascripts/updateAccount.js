@@ -2,10 +2,12 @@ var inputErrors = document.querySelectorAll(".input-errors");
 var email = document.querySelector("#email");
 var password = document.querySelector("#password");
 var add_device = document.querySelector("#add-device");
+var replace_device = document.querySelector("#replace-device");
 
 $(document).ready(function() {
   $(".sidenav").sidenav();
   $(".dropdown-trigger").dropdown();
+  $("select").formSelect();
 });
 
 // Update account information
@@ -43,9 +45,24 @@ function sendReqForAccountInfo() {
 function accountInfoSuccess(data, textStatus, jqXHR) {
   let email = data.email;
   let username = email.split("@")[0];
+  let devices = data.devices;
+  //   console.log(data);
 
   $("#welcome-username-btn").html(`Welcome @${username}`);
   $(".info-update-displayed-email").html(email);
+
+  // Attach all devices number to the select button options (Hidden initially)
+  let oldDeviceSelect = document.querySelector(".old-device-select");
+  let fragment = document.createDocumentFragment();
+  devices.forEach(deviceId => {
+    let option = document.createElement("option");
+    option.value = deviceId;
+    option.innerHTML = deviceId;
+    fragment.appendChild(option);
+  });
+
+  oldDeviceSelect.appendChild(fragment);
+  $("select").formSelect();
 }
 function accountInfoError(jqXHR, textStatus, errorThrown) {
   console.log(errorThrown);
@@ -81,17 +98,21 @@ function showUpdateForm(index) {
 
 function hideUpdateForms() {
   $(".info-update-container").hide();
+  $(".replace-device-btn").hide();
 }
 
 function resetElementsValue() {
   inputErrors.forEach(inputError => {
     inputError.innerHTML = "";
-    email.style.borderBottom = password.style.borderBottom = add_device.style.borderBottom =
-      "1px solid #000";
+    email.style.borderBottom = "1px solid #000";
+    password.style.borderBottom = "1px solid #000";
+    add_device.style.borderBottom = "1px solid #000";
+    replace_device.style.borderBottom = "1px solid #000";
   });
   email.value = "";
   password.value = "";
   add_device.value = "";
+  replace_device.value = "";
 }
 
 function validateInput(id) {
@@ -133,10 +154,17 @@ function validateInput(id) {
       password.style.borderBottom = "2px solid #d35400";
     }
   } else if (id == "add-device") {
-    data = { deviceId: $(`#${id}`).val() };
+    data = { newDeviceId: $(`#${id}`).val() };
     if (!add_device.value) {
       errors.push("Missing Device Number");
       add_device.style.borderBottom = "2px solid #d35400";
+    }
+  } else if (id == "replace-device") {
+    let oldDeviceId = document.querySelector(".old-device-select").value;
+    data = { oldDeviceId: oldDeviceId, newDeviceId: $(`#${id}`).val() };
+    if (!replace_device.value) {
+      errors.push("Missing Device Number");
+      replace_device.style.borderBottom = "2px solid #d35400";
     }
   }
 
@@ -166,6 +194,8 @@ function validateInput(id) {
       sendNewPassword(data);
     } else if (id == "add-device") {
       addNewDevice(data);
+    } else if (id == "replace-device") {
+      replaceDeviceWithNew(data);
     }
   }
 }
@@ -173,7 +203,7 @@ function validateInput(id) {
 // Send the new email to the server
 function sendNewEmail(data) {
   $.ajax({
-    url: "/users/account/update",
+    url: "/users/update",
     type: "POST",
     contentType: "application/json",
     headers: { "x-auth": window.localStorage.getItem("authToken") },
@@ -189,7 +219,7 @@ function emailUpdateSuccess(data, textStatus, jqXHR) {
   window.localStorage.setItem("authToken", data.authToken);
 
   // Refresh the page
-  window.location = "/users/account/update";
+  window.location = "/users/update";
 }
 
 function emailUpdateError(jqXHR, textStatus, errorThrown) {}
@@ -197,7 +227,7 @@ function emailUpdateError(jqXHR, textStatus, errorThrown) {}
 // Send the new password to the server
 function sendNewPassword(data) {
   $.ajax({
-    url: "/users/account/update",
+    url: "/users/update",
     type: "POST",
     contentType: "application/json",
     headers: { "x-auth": window.localStorage.getItem("authToken") },
@@ -230,7 +260,7 @@ function passwordUpdateError(jqXHR, textStatus, errorThrown) {
 // Send the new device to add in the list of devices
 function addNewDevice(data) {
   $.ajax({
-    url: "/users/account/update",
+    url: "/users/update",
     type: "POST",
     contentType: "application/json",
     headers: { "x-auth": window.localStorage.getItem("authToken") },
@@ -242,7 +272,7 @@ function addNewDevice(data) {
 }
 
 function addNewDeviceSuccess(data, textStatus, jqXHR) {
-  console.log(data);
+  $(".add-new-device-update").html("<p>New Device Added successfully</p>");
   $(".add-new-device-update").show();
 
   setTimeout(function() {
@@ -251,5 +281,32 @@ function addNewDeviceSuccess(data, textStatus, jqXHR) {
 }
 
 function addNewDeviceError(jqXHR, textStatus, errorThrown) {
+  console.log(errorThrown);
+}
+
+// Replace a device with a new one
+function replaceDeviceWithNew(data) {
+  $.ajax({
+    url: "/users/update",
+    type: "POST",
+    contentType: "application/json",
+    headers: { "x-auth": window.localStorage.getItem("authToken") },
+    data: JSON.stringify(data),
+    dataType: "json"
+  })
+    .done(replaceDeviceSuccess)
+    .fail(replaceDeviceError);
+}
+
+function replaceDeviceSuccess(data, textStatus, jqXHR) {
+  $(".add-new-device-update").html(`<p>${data.msg}</p>`);
+  $(".add-new-device-update").show();
+
+  setTimeout(function() {
+    $(".add-new-device-update").hide();
+  }, 3000);
+}
+
+function replaceDeviceError(jqXHR, textStatus, errorThrown) {
   console.log(errorThrown);
 }

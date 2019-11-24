@@ -33,7 +33,7 @@
     <header class="main-header">
         <!-- Dropdown Structure -->
         <ul id="dropdown1" class="dropdown-content">
-            <li><a id="update-account" href="/users/account/update">Update Account Information</a></li>
+            <li><a id="update-account" href="/users/update">Update Account Information</a></li>
             <li class="divider"></li>
             <li><a class="logout-btn" href="#">Logout</a></li>
         </ul>
@@ -153,6 +153,8 @@
                     </li>
                 </ul>
 
+                <!-- These are the forms that are shown when user selects one of the option in the account settings -->
+
                 <div class="info-update-container email-form">
                     <div class="row">
                         <div class="input-field col s12">
@@ -200,6 +202,31 @@
                         Device</button>
                     <a class="waves-effect waves-light btn-small info-update-cancel-btn">Cancel</a>
                 </div>
+
+                <div class="info-update-container replace-device-with-new">
+                    <h6 class="replace-device-title">Replace Device</h6>
+                    <div class="row">
+                        <div class="input-field col s12">
+                            <select class="old-device-select"></select>
+                            <label>Choose the Device to Replace</label>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="input-field col s12">
+                            <input id="replace-device" type="text" class="validate">
+                            <label for="replace-device" class="active">New Device</label>
+                        </div>
+                    </div>
+
+                    <p class="input-errors input-errors-add-device"></p>
+
+                    <button class="btn waves-effect waves-light info-update-submit-btn replace-device" type="submit"
+                        name="action">Replace
+                        Device</button>
+                    <a class="waves-effect waves-light btn-small info-update-cancel-btn">Cancel</a>
+                </div>
+
+                <!-- This are the confirmation dialog boxes that are shown on information succesfull update -->
 
                 <div class="new-password-update">
                     <p id="saved-password-state">Password changed successfully!</p>
