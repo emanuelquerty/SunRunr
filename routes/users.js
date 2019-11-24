@@ -8,6 +8,19 @@ let activityModel = require("../models/activities");
 let bcrypt = require("bcryptjs");
 let jwt = require("jwt-simple");
 
+// Function to generate a random apikey consisting of 32 characters
+function getNewApikey() {
+  let newApikey = "";
+  let alphabet =
+    "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+
+  for (let i = 0; i < 32; i++) {
+    newApikey += alphabet.charAt(Math.floor(Math.random() * alphabet.length));
+  }
+
+  return newApikey;
+}
+
 /********************** Register endpoints start here ********************************/
 router.get("/register", function(req, res, next) {
   res.sendFile(path.join(__dirname, "..", "views", "register.html"));
@@ -40,8 +53,7 @@ router.post("/register", function(req, res, next) {
           // Store hashed password in database.
           let newUser = new UserModel({
             email: req.body.email,
-            hashedPassword: hash,
-            deviceID: [req.body.deviceId]
+            hashedPassword: hash
           });
 
           newUser.save(function(error, User) {
@@ -54,16 +66,22 @@ router.post("/register", function(req, res, next) {
             }
 
             // Now save the device in device collection
+            let API_KEY = getNewApikey();
             let newDevice = new DeviceModel({
               email: req.body.email,
-              deviceId: req.body.deviceId
+              deviceId: req.body.deviceId,
+              apiKey: API_KEY
             });
 
             newDevice
               .save()
               .then(device => {
                 // User created successfully
-                res.json({ msg: "User has been saved", success: true });
+                res.json({
+                  msg: `Account Created Successfully.`,
+                  success: true,
+                  apiKey: API_KEY
+                });
               })
               .catch(error => {
                 console.log(error);
@@ -165,10 +183,14 @@ router.get("/read", function(req, res) {
           if (!err) {
             // Construct device list
             let deviceList = [];
+            let apiKeyList = [];
             for (device of devices) {
               deviceList.push(device.deviceId);
+              apiKeyList.push(device.apiKey);
             }
+
             userStatus["devices"] = deviceList;
+            userStatus["apiKeys"] = apiKeyList;
           }
 
           return res.status(200).json(userStatus);
@@ -179,59 +201,6 @@ router.get("/read", function(req, res) {
     return res
       .status(401)
       .json({ success: false, message: "Invalid authentication token." });
-  }
-});
-
-/*************** Route for creating an activity */
-
-router.post("/activity/create", function(req, res, next) {
-  let data = req.body;
-  console.log(data);
-
-  if (
-    data.hasOwnProperty("lon") &&
-    data.hasOwnProperty("lat") &&
-    data.hasOwnProperty("GPS_speed") &&
-    data.hasOwnProperty("uv") &&
-    data.hasOwnProperty("deviceId")
-  ) {
-    DeviceModel.findOne({ deviceID: data.deviceId })
-      .then(device => {
-        let newActivity = new activityModel({
-          deviceID: device.deviceId,
-          longitude: data.lon,
-          latitude: data.lat,
-          GPS_speed: data.GPS_speed,
-          uv: data.uv
-        });
-
-        newActivity
-          .save()
-          .then(activity => {
-            res
-              .status(201)
-              .json({ success: true, msg: "Activity Successfully saved!" });
-          })
-          .catch(error => {
-            res.status(500).json({
-              success: false,
-              msg: "Could not save the activity. Please contact support."
-            });
-          });
-      })
-      .catch(error => {
-        res.status(401).json({
-          success: false,
-          msg:
-            "Something happened while looking for the device. Please contact support."
-        });
-      });
-  } else {
-    res.status(400).json({
-      success: false,
-      msg:
-        "Bad format. Check your json object fields for missing or incorrectly named properties."
-    });
   }
 });
 

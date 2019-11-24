@@ -5,6 +5,19 @@ let jwt = require("jwt-simple");
 let router = express.Router();
 let DeviceModel = require("../models/devices");
 
+// Function to generate a random apikey consisting of 32 characters
+function getNewApikey() {
+  let newApikey = "";
+  let alphabet =
+    "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+
+  for (let i = 0; i < 32; i++) {
+    newApikey += alphabet.charAt(Math.floor(Math.random() * alphabet.length));
+  }
+
+  return newApikey;
+}
+
 router.post("/update", function(req, res, next) {
   // Check for authentication token in x-auth header
   if (!req.headers["x-auth"]) {
@@ -24,9 +37,12 @@ router.post("/update", function(req, res, next) {
       let decodedToken = jwt.decode(authToken, secret);
       let deviceId = req.body.newDeviceId;
 
+      // Get api key and save the new device
+      let API_KEY = getNewApikey();
       let newDevice = new DeviceModel({
         email: decodedToken.email,
-        deviceId: deviceId
+        deviceId: deviceId,
+        apiKey: API_KEY
       });
 
       newDevice

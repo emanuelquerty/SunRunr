@@ -97,9 +97,11 @@ function registerResponseHandler() {
     if (!response.success) {
       var errors = [];
       errors.push(response.msg);
-      ccc;
     } else {
-      window.location = "../../users/login";
+      $("#register-success-msg").html(
+        `<p>${response.msg}</p> <p>Your api key is ${response.apiKey}</p>`
+      );
+      // window.location = "../../users/login";
     }
   }
 }

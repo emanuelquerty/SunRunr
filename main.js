@@ -8,6 +8,7 @@ app.use(bodyParser.json());
 
 let usersRouter = require("./routes/users");
 let devicesRouter = require("./routes/devices");
+let activitiesRouter = require("./routes/activities");
 
 app.use(express.static(path.join(__dirname, "public")));
 
@@ -17,6 +18,7 @@ app.use("/home", function(req, res) {
 
 app.use("/users", usersRouter);
 app.use("/devices", devicesRouter);
+app.use("/activities", activitiesRouter);
 
 app.use("/", function(req, res) {
   res.sendFile(path.join(__dirname, "views", "index.html"));

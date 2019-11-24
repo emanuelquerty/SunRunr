@@ -5,7 +5,11 @@
     <meta charset="UTF-8">
     <title>Sign up</title>
     <link href="/stylesheets/register.css" rel="stylesheet">
-    <!-- <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootswatch/4.3.1/darkly/bootstrap.min.css"> -->
+
+    <!-- Jquery -->
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"
+        integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+
     <script src="/javascripts/register.js" defer></script>
 </head>
 
@@ -26,6 +30,7 @@
         <input type="password" id="passwordConfirm">
 
         <div id="formErrors"></div>
+        <div id="register-success-msg"></div>
 
         <input type="submit" id="submit" value="Sign up">
         <p id="already-registered">Already registered? <a href="/users/login">Log in</a></p>

@@ -7,6 +7,13 @@ body {
   background-color: #222;
 }
 
+.form {
+  width: 42%;
+  background: #f1c40f;
+  padding: 20px 20px 50px 20px;
+  margin: 6% auto;
+}
+
 .form-title {
   font-weight: bold;
   margin-bottom: 0;
@@ -67,12 +74,6 @@ label {
   font-weight: bold;
 }
 
-.form {
-  width: 42%;
-  background: #f1c40f;
-  padding: 20px 20px 50px 20px;
-  margin: 6% auto;
-}
 #already-registered {
   font-size: 10pt;
 }
@@ -86,5 +87,13 @@ label {
 
 #already-registered a:hover {
   color: #ff5400;
+  font-weight: bold;
+}
+
+#register-success-msg p {
+  color: #000;
+  font-size: 0.8rem;
+  margin: 1rem 0;
+  color: green;
   font-weight: bold;
 }

@@ -1,11 +1,11 @@
 let db = require("../database/db");
 
 let activitySchema = db.Schema({
-  deviceID: { type: String, require: true },
-  longitude: { type: String, require: true },
-  latitude: { type: String, require: true },
-  GPS_speed: { type: String, require: true },
-  uv: { type: String, require: true }
+  deviceId: { type: String, required: true },
+  longitude: { type: String, required: true },
+  latitude: { type: String, required: true },
+  GPS_speed: { type: String, required: true },
+  uv: { type: String, required: true }
 });
 
 let activityModel = db.model("activity", activitySchema);
