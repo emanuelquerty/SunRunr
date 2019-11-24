@@ -60,7 +60,7 @@ router.post("/create", function(req, res, next) {
     res.status(201).json({
       success: false,
       msg:
-        "Bad format. Check your json object fields for missing or incorrectly named properties.",
+        "Bad format! Check your json object fields for missing or incorrectly named properties.",
       correctFormat: {
         lon: "longitude",
         lat: "latitude",
