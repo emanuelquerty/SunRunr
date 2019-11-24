@@ -57,7 +57,7 @@ router.post("/create", function(req, res, next) {
         });
       });
   } else {
-    res.status(400).json({
+    res.status(201).json({
       success: false,
       msg:
         "Bad format. Check your json object fields for missing or incorrectly named properties.",
