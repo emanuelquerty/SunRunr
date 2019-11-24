@@ -1,49 +1,74 @@
 let express = require("express");
+let fs = require("fs");
+let path = require("path");
+let jwt = require("jwt-simple");
 let router = express.Router();
-let Device = require("../models/devices");
+let DeviceModel = require("../models/devices");
 
-router.post("/register", function(req, res) {
-  if (req.body.hasOwnProperty("email") && req.body.hasOwnProperty("deviceID")) {
-    let email = req.body.email;
-    let deviceID = req.body.deviceID;
+router.post("/update", function(req, res, next) {
+  // Check for authentication token in x-auth header
+  if (!req.headers["x-auth"]) {
+    return res.redirect("/");
+  }
+  // Authenticatin token is set
+  var authToken = req.headers["x-auth"];
 
-    console.log(email);
-    console.log(deviceID);
+  if (
+    req.body.hasOwnProperty("newDeviceId") &&
+    !req.body.hasOwnProperty("oldDeviceId")
+  ) {
+    try {
+      let secret = fs
+        .readFileSync(path.join(__dirname, "..", "..", "jwtSecretkey.txt"))
+        .toString();
+      let decodedToken = jwt.decode(authToken, secret);
+      let deviceId = req.body.newDeviceId;
 
-    Device.findOne({ email: email, deviceID: deviceID })
-      .then(device => {
-        if (device) {
-          console.log(device);
-          return res.status(201).json({
-            success: false,
-            msg: "The device already exists. Try a different device"
-          });
-        }
+      let newDevice = new DeviceModel({
+        email: decodedToken.email,
+        deviceId: deviceId
+      });
 
-        // OK to add the device
-        let newDevice = new Device({
-          email: email,
-          deviceID: deviceID
+      newDevice
+        .save()
+        .then(device => {
+          res
+            .status(201)
+            .json({ success: true, msg: "New device Added successfully" });
+        })
+        .catch(error => {
+          console.log("Could not save the device");
         });
+    } catch (ex) {
+      return res
+        .status(401)
+        .json({ success: false, message: "Invalid authentication token." });
+    }
+  } else if (
+    req.body.hasOwnProperty("newDeviceId") &&
+    req.body.hasOwnProperty("oldDeviceId")
+  ) {
+    let newDeviceId = req.body.newDeviceId;
+    let oldDeviceId = req.body.oldDeviceId;
 
-        newDevice.save(function(error, device) {
-          if (error) {
-            return res
-              .status(400)
-              .json("Error adding the device. Please contact support...");
-          }
+    let secret = fs
+      .readFileSync(path.join(__dirname, "..", "..", "jwtSecretkey.txt"))
+      .toString();
+    let decodedToken = jwt.decode(authToken, secret);
 
-          // Device saved
-          res.status(201).json({
-            success: true,
-            msg: `The device ${device.deviceID} was added successfully`
-          });
+    DeviceModel.findOneAndUpdate(
+      { email: decodedToken.email, deviceId: oldDeviceId },
+      { deviceId: newDeviceId },
+      { useFindAndModify: false }
+    )
+      .then(device => {
+        res.status(201).json({
+          success: true,
+          msg: `Device ${oldDeviceId} replaced with device ${newDeviceId}`
         });
       })
       .catch(error => {
-        res
-          .status(400)
-          .json("Error adding the device. Please contact support!");
+        console.log(error);
       });
   }
 });
