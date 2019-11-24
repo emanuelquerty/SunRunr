@@ -204,7 +204,7 @@ function validateInput(id) {
 function sendNewEmail(data) {
   $.ajax({
     url: "/users/update",
-    type: "POST",
+    type: "PUT",
     contentType: "application/json",
     headers: { "x-auth": window.localStorage.getItem("authToken") },
     data: JSON.stringify(data),
@@ -228,7 +228,7 @@ function emailUpdateError(jqXHR, textStatus, errorThrown) {}
 function sendNewPassword(data) {
   $.ajax({
     url: "/users/update",
-    type: "POST",
+    type: "PUT",
     contentType: "application/json",
     headers: { "x-auth": window.localStorage.getItem("authToken") },
     data: JSON.stringify(data),
@@ -261,7 +261,7 @@ function passwordUpdateError(jqXHR, textStatus, errorThrown) {
 function addNewDevice(data) {
   $.ajax({
     url: "/devices/update",
-    type: "POST",
+    type: "PUT",
     contentType: "application/json",
     headers: { "x-auth": window.localStorage.getItem("authToken") },
     data: JSON.stringify(data),
@@ -288,7 +288,7 @@ function addNewDeviceError(jqXHR, textStatus, errorThrown) {
 function replaceDeviceWithNew(data) {
   $.ajax({
     url: "/devices/update",
-    type: "POST",
+    type: "PUT",
     contentType: "application/json",
     headers: { "x-auth": window.localStorage.getItem("authToken") },
     data: JSON.stringify(data),

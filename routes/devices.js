@@ -18,7 +18,7 @@ function getNewApikey() {
   return newApikey;
 }
 
-router.post("/update", function(req, res, next) {
+router.put("/update", function(req, res, next) {
   // Check for authentication token in x-auth header
   if (!req.headers["x-auth"]) {
     return res.redirect("/");
