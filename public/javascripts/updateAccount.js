@@ -3,6 +3,7 @@ var email = document.querySelector("#email");
 var password = document.querySelector("#password");
 var add_device = document.querySelector("#add-device");
 var replace_device = document.querySelector("#replace-device");
+var uv_threshold = document.querySelector("#uv-threshold");
 
 $(document).ready(function() {
   $(".sidenav").sidenav();
@@ -63,6 +64,9 @@ function accountInfoSuccess(data, textStatus, jqXHR) {
 
   oldDeviceSelect.appendChild(fragment);
   $("select").formSelect();
+
+  // Display the initial UV Threshold
+  $(".ultraviolet").html(`UV Threshold: ${data.uv_threshold}`);
 }
 function accountInfoError(jqXHR, textStatus, errorThrown) {
   console.log(errorThrown);
@@ -98,7 +102,6 @@ function showUpdateForm(index) {
 
 function hideUpdateForms() {
   $(".info-update-container").hide();
-  $(".replace-device-btn").hide();
 }
 
 function resetElementsValue() {
@@ -108,13 +111,16 @@ function resetElementsValue() {
     password.style.borderBottom = "1px solid #000";
     add_device.style.borderBottom = "1px solid #000";
     replace_device.style.borderBottom = "1px solid #000";
+    uv_threshold.style.borderBottom = "1px solid #000";
   });
   email.value = "";
   password.value = "";
   add_device.value = "";
   replace_device.value = "";
+  uv_threshold.value = "";
 }
 
+// Given an id identifying the task or use information to change, validates the inpu entered by the user
 function validateInput(id) {
   var data;
   var errors = [];
@@ -166,6 +172,13 @@ function validateInput(id) {
       errors.push("Missing Device Number");
       replace_device.style.borderBottom = "2px solid #d35400";
     }
+  } else if (id == "uv-threshold") {
+    let uv = $(`#${id}`).val();
+    data = { uv: parseInt(uv) };
+    if (!uv_threshold.value) {
+      errors.push("Missing UV Threshold");
+      uv_threshold.style.borderBottom = "2px solid #d35400";
+    }
   }
 
   if (errors.length > 0) {
@@ -196,11 +209,13 @@ function validateInput(id) {
       addNewDevice(data);
     } else if (id == "replace-device") {
       replaceDeviceWithNew(data);
+    } else if (id == "uv-threshold") {
+      setUvThreshold(data);
     }
   }
 }
 
-// Send the new email to the server
+/*******************************************   Change the email  ********************************************/
 function sendNewEmail(data) {
   $.ajax({
     url: "/users/update",
@@ -222,9 +237,11 @@ function emailUpdateSuccess(data, textStatus, jqXHR) {
   window.location = "/users/update";
 }
 
-function emailUpdateError(jqXHR, textStatus, errorThrown) {}
+function emailUpdateError(jqXHR, textStatus, errorThrown) {
+  console.log(errorThrown);
+}
 
-// Send the new password to the server
+/********************************************* Change the password  ************************************************/
 function sendNewPassword(data) {
   $.ajax({
     url: "/users/update",
@@ -257,7 +274,7 @@ function passwordUpdateError(jqXHR, textStatus, errorThrown) {
   console.log(errorThrown);
 }
 
-// Send the new device to add in the list of devices
+/***************************************   Add new device in the list of devices  ************************************/
 function addNewDevice(data) {
   $.ajax({
     url: "/devices/update",
@@ -284,7 +301,7 @@ function addNewDeviceError(jqXHR, textStatus, errorThrown) {
   console.log(errorThrown);
 }
 
-// Replace a device with a new one
+/**************************************   Replace a device with a new one       ****************************************/
 function replaceDeviceWithNew(data) {
   $.ajax({
     url: "/devices/update",
@@ -308,5 +325,28 @@ function replaceDeviceSuccess(data, textStatus, jqXHR) {
 }
 
 function replaceDeviceError(jqXHR, textStatus, errorThrown) {
+  console.log(errorThrown);
+}
+
+/*****************************************  Sets the UV Threshold *******************************************/
+
+function setUvThreshold(data) {
+  $.ajax({
+    url: "/users/update",
+    type: "PUT",
+    contentType: "application/json",
+    headers: { "x-auth": window.localStorage.getItem("authToken") },
+    data: JSON.stringify(data),
+    dataType: "json"
+  })
+    .done(setUvThresholdSuccess)
+    .fail(setUvThresholdError);
+}
+
+function setUvThresholdSuccess(data, textStatus, jqXHR) {
+  window.location = "/users/update";
+}
+
+function setUvThresholdError(jqXHR, textStatus, errorThrown) {
   console.log(errorThrown);
 }

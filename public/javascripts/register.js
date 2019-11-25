@@ -101,7 +101,6 @@ function registerResponseHandler() {
       $("#register-success-msg").html(
         `<p>${response.msg}</p> <p>Your api key is ${response.apiKey}</p>`
       );
-      // window.location = "../../users/login";
     }
   }
 }

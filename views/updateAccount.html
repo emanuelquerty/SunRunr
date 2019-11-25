@@ -144,8 +144,13 @@
                                     class="material-icons">send</i></a></div>
                     </li>
                     <li class="collection-item collection-item-replace-device">
-                        <div class="wrapper-div">Replace Device<span class="account-info-span">Select
+                        <div class="wrapper-div">Replace a Device<span class="account-info-span">Select
                                 Divice</span><a href="#!" class="secondary-content"><i
+                                    class="material-icons">send</i></a></div>
+                    </li>
+                    <li class="collection-item collection-item-set-uv-threshold">
+                        <div class="wrapper-div">Ultraviolet Threshold<span class="account-info-span ultraviolet">Set
+                                Threshold</span><a href="#!" class="secondary-content"><i
                                     class="material-icons">send</i></a></div>
                     </li>
                     <li class="collection-item">
@@ -223,6 +228,21 @@
                     <button class="btn waves-effect waves-light info-update-submit-btn replace-device" type="submit"
                         name="action">Replace
                         Device</button>
+                    <a class="waves-effect waves-light btn-small info-update-cancel-btn">Cancel</a>
+                </div>
+
+                <div class="info-update-container set-ultraviolet-threshold">
+                    <div class="row">
+                        <div class="input-field col s12">
+                            <input id="uv-threshold" type="text" class="validate">
+                            <label for="uv-threshold" class="active">Enter uv threshold</label>
+                        </div>
+                    </div>
+
+                    <p class="input-errors input-errors-add-device"></p>
+
+                    <button class="btn waves-effect waves-light info-update-submit-btn uv-threshold" type="submit"
+                        name="action">Set Threshold</button>
                     <a class="waves-effect waves-light btn-small info-update-cancel-btn">Cancel</a>
                 </div>
 

@@ -52,7 +52,8 @@ exports.postUserRegister = function(req, res, next) {
           // Store hashed password in database.
           let newUser = new UserModel({
             email: req.body.email,
-            hashedPassword: hash
+            hashedPassword: hash,
+            UV_threshold: 4 // When user registers, user is not asked for UV, so we just set it to 4 initially
           });
 
           newUser.save(function(error, User) {
@@ -176,6 +177,7 @@ exports.getUserRead = function(req, res) {
       } else {
         userStatus["success"] = true;
         userStatus["email"] = user.email;
+        userStatus["uv_threshold"] = user.UV_threshold;
 
         // Find devices based on decoded token
         DeviceModel.find({ email: decodedToken.email }, function(err, devices) {
@@ -280,7 +282,8 @@ exports.postUserUpdate = function(req, res, next) {
               if (err) {
                 let msg = {
                   success: false,
-                  message: "Error trying to change. Please contact support"
+                  message:
+                    "Error trying to change password. Please contact support"
                 };
 
                 res.status(201).json(msg);
@@ -295,6 +298,42 @@ exports.postUserUpdate = function(req, res, next) {
           );
         });
       }); // bcrypt.genSalt() method ends here
+    } catch (ex) {
+      return res
+        .status(401)
+        .json({ success: false, message: "Invalid authentication token." });
+    }
+  } else if (req.body.hasOwnProperty("uv")) {
+    let uv = req.body.uv;
+
+    try {
+      let secret = fs
+        .readFileSync(path.join(__dirname, "..", "..", "jwtSecretkey.txt"))
+        .toString();
+      let decodedToken = jwt.decode(authToken, secret);
+
+      UserModel.findOneAndUpdate(
+        { email: decodedToken.email },
+        { UV_threshold: uv },
+        { useFindAndModify: false },
+        function(err, user) {
+          if (err) {
+            let msg = {
+              success: false,
+              message:
+                "Error trying to change uv threshold. Please contact support"
+            };
+
+            res.status(201).json(msg);
+          } else {
+            let msg = {
+              success: true,
+              message: "uv threshold changed successfully"
+            };
+            res.status(201).json(msg);
+          }
+        }
+      );
     } catch (ex) {
       return res
         .status(401)
