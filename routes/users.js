@@ -17,4 +17,11 @@ router.get("/read", userRoutes.getUserRead);
 router.get("/update", userRoutes.getUserUpdate);
 router.put("/update", userRoutes.postUserUpdate);
 
+/********************* Route for weather forecast */
+router.get("/weather-forecast", userRoutes.getWeatherForecast);
+router.get(
+  "/get-most-recent-activity-location",
+  userRoutes.getMostRecentActivityLocation
+);
+
 module.exports = router;

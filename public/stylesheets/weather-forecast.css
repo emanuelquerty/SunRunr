@@ -1,0 +1,12 @@
+.right-panel {
+  height: initial;
+  padding: 2rem 4rem !important;
+}
+
+th {
+  background: #f1c40f;
+}
+
+td {
+  font-size: 0.8rem;
+}

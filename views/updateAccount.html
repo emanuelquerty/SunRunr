@@ -30,7 +30,7 @@
 </head>
 
 <body>
-    <header class="main-header">
+    <header class="main-header navbar-fixed">
         <!-- Dropdown Structure -->
         <ul id="dropdown1" class="dropdown-content">
             <li><a id="update-account" href="/users/update">Update Account Information</a></li>
@@ -70,7 +70,8 @@
                 </a>
             </li>
             <li>
-                <a class="left-panel-link" href="/weather-forecast"><i class="material-icons home-icon">cloud_queue</i>
+                <a class="left-panel-link" href="/users/weather-forecast"><i
+                        class="material-icons home-icon">cloud_queue</i>
                     Weather
                     Forecast
                 </a>
@@ -97,7 +98,7 @@
 
     <main>
         <div class="row">
-            <div class="col s3 left-panel">
+            <div class="col s3 left-panel hide-on-med-and-down">
                 <i class="material-icons home-icon sun app_icon">brightness_4</i>
                 <a class="left-panel-link" href="/home"><i class="material-icons home-icon">home</i> Home
                 </a>
@@ -107,7 +108,8 @@
                 </a>
                 <a class="left-panel-link" href="/devices"><i class="material-icons home-icon">device_hub</i> Devices
                 </a>
-                <a class="left-panel-link" href="/weather-forecast"><i class="material-icons home-icon">cloud_queue</i>
+                <a class="left-panel-link" href="/users/weather-forecast"><i
+                        class="material-icons home-icon">cloud_queue</i>
                     Weather
                     Forecast
                 </a>
@@ -122,7 +124,7 @@
                     Readings
                 </a>
             </div>
-            <div class="col s8 right-panel">
+            <div class="col l8 m12 s12 right-panel">
                 <ul id="account-info-collection" class="collection with-header">
                     <li class="collection-header">
                         <h5>Account Settings</h5>

@@ -1,8 +1,8 @@
-let express = require("express");
 let fs = require("fs");
 let path = require("path");
 let UserModel = require("../models/users");
 let DeviceModel = require("../models/devices");
+let ActivityModel = require("../models/activities");
 let bcrypt = require("bcryptjs");
 let jwt = require("jwt-simple");
 
@@ -339,5 +339,42 @@ exports.postUserUpdate = function(req, res, next) {
         .status(401)
         .json({ success: false, message: "Invalid authentication token." });
     }
+  }
+};
+
+// Load weather-forecast.html
+exports.getWeatherForecast = function(req, res) {
+  res.sendFile(path.join(__dirname, "..", "views", "weather-forecast.html"));
+};
+
+exports.getMostRecentActivityLocation = function(req, res) {
+  // Check for authentication token in x-auth header
+  if (!req.headers["x-auth"]) {
+    return res.redirect("/");
+  }
+  // Authenticatin token is set
+  var authToken = req.headers["x-auth"];
+
+  try {
+    let secret = fs
+      .readFileSync(path.join(__dirname, "..", "..", "jwtSecretkey.txt"))
+      .toString();
+    let decodedToken = jwt.decode(authToken, secret);
+
+    ActivityModel.find()
+      .then(activities => {
+        // TODO: need to change activities schema to have a field create_at that holds the date each activity is created
+        // So that we can fetch the most recent activity location. For now, we'll hardcode the location
+        res
+          .status(201)
+          .json({ success: true, lat: 32.284111, lon: -110.962715 });
+      })
+      .catch(error => {
+        console.log(error);
+      });
+  } catch (ex) {
+    return res
+      .status(401)
+      .json({ success: false, message: "Invalid authentication token." });
   }
 };
