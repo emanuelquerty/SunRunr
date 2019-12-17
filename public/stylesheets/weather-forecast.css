@@ -22,3 +22,27 @@ table:first-child {
 table {
   margin-top: 5rem;
 }
+
+/* *********************************** Media Queries Start Here *********************************** */
+
+@media screen and (max-width: 992px) {
+  main {
+    padding: 0rem;
+  }
+  .right-panel {
+    margin-left: 0rem !important;
+    border: none;
+  }
+}
+
+@media screen and (max-width: 630px) {
+  .right-panel {
+    padding: 1rem !important;
+  }
+}
+
+@media screen and (max-width: 418px) {
+  html {
+    font-size: 70%;
+  }
+}

@@ -116,3 +116,47 @@ h4 {
 .replace-device-with-new .old-device-select {
   margin: 0 !important;
 }
+
+/* *********************************** Media Queries Start Here *********************************** */
+
+@media screen and (max-width: 992px) {
+  main {
+    padding: 3rem;
+  }
+  .right-panel {
+    margin-left: 0rem !important;
+    border: none;
+  }
+}
+
+@media screen and (max-width: 660px) {
+  main {
+    padding: 1rem;
+  }
+}
+
+@media screen and (max-width: 550px) {
+  html {
+    font-size: 70%;
+  }
+}
+
+@media screen and (max-width: 445px) {
+  html {
+    font-size: 70%;
+  }
+
+  .collection-item {
+    padding: 0.8rem !important;
+  }
+
+  .account-info-span {
+    left: 37%;
+  }
+}
+
+@media screen and (max-width: 399px) {
+  html {
+    font-size: 62.5%;
+  }
+}

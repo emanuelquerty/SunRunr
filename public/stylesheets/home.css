@@ -88,3 +88,16 @@ i {
 .sidenav {
   padding-top: 2rem;
 }
+
+/* *********************************** Media Queries Start Here *********************************** */
+
+@media screen and (max-width: 1159px) {
+  .left-panel {
+    padding: 1rem !important;
+  }
+
+  .left-panel-link {
+    font-size: 1rem;
+    padding: 1rem;
+  }
+}
