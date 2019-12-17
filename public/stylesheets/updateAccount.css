@@ -15,6 +15,11 @@
   box-shadow: none;
 }
 
+h4 {
+  font-size: 1.4rem;
+  margin-left: 0.7rem;
+}
+
 #account-info-collection {
   border: 1px solid #ccc;
   box-shadow: 0.01rem 0.01rem 0.1rem 0rem #999;
@@ -37,7 +42,7 @@
   background-color: #f0f4c3 !important;
 }
 #account-info-collection li:last-child {
-  height: 18rem;
+  height: 9.5rem;
 }
 
 .account-info-span {

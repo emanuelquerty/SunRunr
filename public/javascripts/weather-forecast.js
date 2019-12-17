@@ -1,147 +1,63 @@
 $(function() {
-  getMostRecentActivityLocation();
-});
-
-// Get a user's information to display in home page
-function getMostRecentActivityLocation() {
   $.ajax({
-    url: "/users/get-most-recent-activity-location",
+    url: "/users/read/weather-forecast",
     type: "GET",
     headers: { "x-auth": window.localStorage.getItem("authToken") },
     dataType: "json"
   })
-    .done(mostRecentActivityLocationSuccess)
-    .fail(mostRecentActivityLocationError);
-}
+    .done(getForecastDataSuccess)
+    .fail(getForecastDataError);
+});
 
-function mostRecentActivityLocationSuccess(data, textStatus, jqXHR) {
-  getLocationForecast(data.lat, data.lon);
-}
-function mostRecentActivityLocationError(jqXHR, textStatus, errorThrown) {
-  console.log(errorThrown);
-}
-
-function getLocationForecast(lat, lon) {
-  let forecastUrl = `https://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&appid=045d7a604186991f3a06dfec6589cee1`;
-  fetch(forecastUrl)
-    .then(res => res.json())
-    .then(res => {
-      let forecastDays = getForecastDays(res);
-      populateWeatherForecastTable(forecastDays);
-      console.log(forecastDays);
+function getForecastDataSuccess(weatherForecastdata, textStatus, jqXHR) {
+  // UV index for opean weather map api has a separate endpoint, so we fetch uv index now from our server
+  $.ajax({
+    url: "/users/read/uv-forecast",
+    type: "GET",
+    headers: { "x-auth": window.localStorage.getItem("authToken") },
+    dataType: "json"
+  })
+    .done(function(uvForecastData, textStatus, jqXHR) {
+      console.log(uvForecastData);
+      populateWeatherForecastTable(
+        weatherForecastdata.forecastDays,
+        uvForecastData
+      );
     })
-    .catch(error => {
-      console.log(error);
+    .fail(function(jqXHR, textStatus, errorThrown) {
+      console.log(errorThrown);
     });
 }
 
-Date.prototype.addDays = function(days) {
-  var date = new Date(this.valueOf());
-  date.setDate(date.getDate() + days);
-  return date;
-};
-
-function getForecastDays(rawResponse) {
-  let data = rawResponse.list;
-
-  let forecastDays = {};
-  for (let i = 0; i < data.length; i++) {
-    let date = new Date(data[i].dt_txt);
-    let dayOfWeek = getDayOfWeek(date.getDay());
-
-    switch (dayOfWeek) {
-      case "Monday":
-        if (!forecastDays.hasOwnProperty("Monday")) {
-          forecastDays.Monday = [];
-        }
-        forecastDays.Monday.push(data[i]);
-        break;
-      case "Tuesday":
-        if (!forecastDays.hasOwnProperty("Tuesday")) {
-          forecastDays.Tuesday = [];
-        }
-        forecastDays.Tuesday.push(data[i]);
-        break;
-      case "Wednesday":
-        if (!forecastDays.hasOwnProperty("Wednesday")) {
-          forecastDays.Wednesday = [];
-        }
-        forecastDays.Wednesday.push(data[i]);
-        break;
-      case "Thursday":
-        if (!forecastDays.hasOwnProperty("Thursday")) {
-          forecastDays.Thursday = [];
-        }
-        forecastDays.Thursday.push(data[i]);
-        break;
-      case "Friday":
-        if (!forecastDays.hasOwnProperty("Friday")) {
-          forecastDays.Friday = [];
-        }
-        forecastDays.Friday.push(data[i]);
-        break;
-      case "Saturday":
-        if (!forecastDays.hasOwnProperty("Saturday")) {
-          forecastDays.Saturday = [];
-        }
-        forecastDays.Saturday.push(data[i]);
-        break;
-      case "Sunday":
-        if (!forecastDays.hasOwnProperty("Sunday")) {
-          forecastDays.Sunday = [];
-        }
-        forecastDays.Sunday.push(data[i]);
-        break;
-    }
-  }
-
-  // Delete Empty Days
-  for (let day in forecastDays) {
-    if (forecastDays[day].length == 0) {
-      delete forecastDays[day];
-    }
-  }
-
-  return forecastDays;
+function getForecastDataError(jqXHR, textStatus, errorThrown) {
+  console.log(errorThrown);
 }
 
-function getDayOfWeek(dayOfWeek) {
-  return isNaN(dayOfWeek)
-    ? null
-    : [
-        "Sunday",
-        "Monday",
-        "Tuesday",
-        "Wednesday",
-        "Thursday",
-        "Friday",
-        "Saturday"
-      ][dayOfWeek];
-}
-
-function populateWeatherForecastTable(forecastDays) {
+// Create tables to display the forecast for each weekday
+function populateWeatherForecastTable(weatherForecastdata, uvForecastData) {
   // Create header row
   let outerDocumentFragment = document.createDocumentFragment();
-  for (day in forecastDays) {
+  for (day in weatherForecastdata) {
     let headerTemplateRow = $(".header_row");
     let header = document.createElement("tr");
     header.innerHTML = headerTemplateRow.html();
     let documentFragment = document.createDocumentFragment();
     documentFragment.appendChild(header);
-    // console.log(documentFragment);
-    forecastDays[day].forEach(dayTime => {
+
+    let i = 0;
+    weatherForecastdata[day].forEach(dayTime => {
       let date = new Date(dayTime.dt_txt);
       let time = formatAMPM(date);
       let description = dayTime.weather[0].description;
       let temperature = dayTime.main.temp;
       let humidity = dayTime.main.humidity;
 
-      //   console.log(day);
-      //   console.log(time);
-      //   console.log(description);
-      //   console.log(temperature);
-      //   console.log(humidity);
-      //   console.log("__________________");
+      // Alternate rows color
+      if (i % 2 != 0) {
+        $("td").css("backgroundColor", "#fcf4ac");
+      } else {
+        $("td").css("backgroundColor", "initial");
+      }
 
       // Populate Table
       $(".time").html(
@@ -152,15 +68,16 @@ function populateWeatherForecastTable(forecastDays) {
       $(".description").html(description);
       $(".temperature").html(temperature + "&#176; K");
       $(".humidity").html(humidity);
+      $(".uv").html(uvForecastData[day][0].value);
 
       let dataTemplateRow = $(".data_row");
       let dataRow = document.createElement("tr");
       dataRow.innerHTML = dataTemplateRow.html();
       documentFragment.appendChild(dataRow);
+      i++;
     });
 
     let table = document.createElement("table");
-    table.style.marginTop = "4rem";
     table.appendChild(documentFragment);
     outerDocumentFragment.appendChild(table);
   }
@@ -169,6 +86,7 @@ function populateWeatherForecastTable(forecastDays) {
   $(".daily-forecast").append(outerDocumentFragment);
 }
 
+// Given a Date object, returns the time in am/pm format
 function formatAMPM(date) {
   var hours = date.getHours();
   var minutes = date.getMinutes();

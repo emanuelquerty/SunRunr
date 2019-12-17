@@ -316,7 +316,7 @@ function replaceDeviceWithNew(data) {
 }
 
 function replaceDeviceSuccess(data, textStatus, jqXHR) {
-  $(".add-new-device-update").html(`<p>${data.msg}</p>`);
+  $(".add-new-device-update").html(`<p>Device replaced successfully</p>`);
   $(".add-new-device-update").show();
 
   setTimeout(function() {

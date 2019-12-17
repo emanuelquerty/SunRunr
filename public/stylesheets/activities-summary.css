@@ -1,0 +1,30 @@
+.right-panel {
+  height: initial;
+  padding: 1rem 4rem !important;
+}
+
+h4 {
+  font-size: 1.4rem;
+}
+
+.activity-container {
+  margin-top: 2rem;
+  border: 1px solid #ccc;
+  box-shadow: 0.01rem 0.01rem 0.1rem 0rem #999;
+  height: 30rem;
+}
+
+.activity-header {
+  padding: 1rem 2rem;
+  border-bottom: 1px solid #ccc;
+  height: 8rem;
+}
+
+.activity-header-values,
+.activity-body-values {
+  color: #555;
+}
+
+.activity-body {
+  padding: 1rem 2rem;
+}

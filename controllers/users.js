@@ -3,21 +3,10 @@ let path = require("path");
 let UserModel = require("../models/users");
 let DeviceModel = require("../models/devices");
 let ActivityModel = require("../models/activities");
+let utilities = require("../utilities/users");
 let bcrypt = require("bcryptjs");
 let jwt = require("jwt-simple");
-
-// Function to generate a random apikey consisting of 32 characters
-function getNewApikey() {
-  let newApikey = "";
-  let alphabet =
-    "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-
-  for (let i = 0; i < 32; i++) {
-    newApikey += alphabet.charAt(Math.floor(Math.random() * alphabet.length));
-  }
-
-  return newApikey;
-}
+let fetch = require("node-fetch");
 
 // Send the register.html middleware
 exports.getUserRegister = function(req, res, next) {
@@ -53,7 +42,7 @@ exports.postUserRegister = function(req, res, next) {
           let newUser = new UserModel({
             email: req.body.email,
             hashedPassword: hash,
-            UV_threshold: 4 // When user registers, user is not asked for UV, so we just set it to 4 initially
+            UV_threshold: 12 // When user registers, user is not asked for UV, so we just set it initially to 12
           });
 
           newUser.save(function(error, User) {
@@ -66,7 +55,7 @@ exports.postUserRegister = function(req, res, next) {
             }
 
             // Now save the device in device collection
-            let API_KEY = getNewApikey();
+            let API_KEY = utilities.getNewApikey();
             let newDevice = new DeviceModel({
               email: req.body.email,
               deviceId: req.body.deviceId,
@@ -347,7 +336,8 @@ exports.getWeatherForecast = function(req, res) {
   res.sendFile(path.join(__dirname, "..", "views", "weather-forecast.html"));
 };
 
-exports.getMostRecentActivityLocation = function(req, res) {
+// Get 5 days ahead weather forecast from Open Weather Map API
+exports.getWeatherForecastData = function(req, res) {
   // Check for authentication token in x-auth header
   if (!req.headers["x-auth"]) {
     return res.redirect("/");
@@ -361,13 +351,31 @@ exports.getMostRecentActivityLocation = function(req, res) {
       .toString();
     let decodedToken = jwt.decode(authToken, secret);
 
+    // Get the most recent activity
     ActivityModel.find()
+      .sort({ created_at: "desc" })
+      .exec()
       .then(activities => {
-        // TODO: need to change activities schema to have a field create_at that holds the date each activity is created
-        // So that we can fetch the most recent activity location. For now, we'll hardcode the location
-        res
-          .status(201)
-          .json({ success: true, lat: 32.284111, lon: -110.962715 });
+        let mostRecentActivity = activities[0];
+        let lat = mostRecentActivity.dataEverySetInterval[0].latitude;
+        let lon = mostRecentActivity.dataEverySetInterval[0].longitude;
+
+        // Fetch the 5 days ahead weather forecast
+        let weatherForecastUrl = `https://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&appid=045d7a604186991f3a06dfec6589cee1`;
+        fetch(weatherForecastUrl)
+          .then(response => response.json())
+          .then(response => {
+            let weatherForecastDays = utilities.getForecastDays(
+              response,
+              "weather"
+            );
+            res
+              .status(201)
+              .json({ success: true, forecastDays: weatherForecastDays });
+          })
+          .catch(error => {
+            console.log(error);
+          });
       })
       .catch(error => {
         console.log(error);
@@ -377,4 +385,55 @@ exports.getMostRecentActivityLocation = function(req, res) {
       .status(401)
       .json({ success: false, message: "Invalid authentication token." });
   }
+};
+
+exports.getUvForecastData = function(req, res) {
+  // Check for authentication token in x-auth header
+  if (!req.headers["x-auth"]) {
+    return res.redirect("/");
+  }
+  // Authenticatin token is set
+  var authToken = req.headers["x-auth"];
+
+  try {
+    let secret = fs
+      .readFileSync(path.join(__dirname, "..", "..", "jwtSecretkey.txt"))
+      .toString();
+    let decodedToken = jwt.decode(authToken, secret);
+
+    // Get the most recent activity
+    ActivityModel.find()
+      .sort({ created_at: "desc" })
+      .exec()
+      .then(activities => {
+        let mostRecentActivity = activities[0];
+        let lat = mostRecentActivity.dataEverySetInterval[0].latitude;
+        let lon = mostRecentActivity.dataEverySetInterval[0].longitude;
+        // Fetch the 5 days ahead uv forecast
+        let uvForecastUrl = `https://api.openweathermap.org/data/2.5/uvi/forecast?lat=${lat}&lon=${lon}&appid=045d7a604186991f3a06dfec6589cee1&cnt=4`;
+        fetch(uvForecastUrl)
+          .then(response => response.json())
+          .then(response => {
+            let uvForecastDays = utilities.getForecastDays(response, "uv");
+            res.status(201).json(uvForecastDays);
+          })
+          .catch(error => {
+            console.log(error);
+          });
+      });
+  } catch (ex) {
+    return res
+      .status(401)
+      .json({ success: false, message: "Invalid authentication token." });
+  }
+};
+
+// Load activities-summary.html
+exports.getActivitiesSummary = function(req, res) {
+  res.sendFile(path.join(__dirname, "..", "views", "activities-summary.html"));
+};
+
+// Load weekly-summary.html
+exports.getWeeklySummary = function(req, res) {
+  res.sendFile(path.join(__dirname, "..", "views", "weekly-summary.html"));
 };
