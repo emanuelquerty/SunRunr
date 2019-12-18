@@ -17,7 +17,8 @@ let activitySchema = db.Schema({
   humidity: { type: String, required: true },
   activityType: { type: String, required: true },
   deviceId: { type: String, required: true },
-  created_at: { type: Date, required: true } // saved in milliseconds (since Jan 1st 1970)
+  created_at: { type: Date, required: true }, // saved in milliseconds (since Jan 1st 1970)
+  email: { type: String, required: true }
 });
 
 let activityModel = db.model("activity", activitySchema);

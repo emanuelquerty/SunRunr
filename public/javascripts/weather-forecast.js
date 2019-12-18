@@ -18,11 +18,29 @@ function getForecastDataSuccess(weatherForecastdata, textStatus, jqXHR) {
     dataType: "json"
   })
     .done(function(uvForecastData, textStatus, jqXHR) {
-      console.log(uvForecastData);
-      populateWeatherForecastTable(
-        weatherForecastdata.forecastDays,
-        uvForecastData
-      );
+      // Sometimes at some time in the day, uv for tomorrow won't be returned
+      //by the open weather map api because of timezone differences
+      // Since we're displaying forecast for tomorrow as well, we need to ensure we have uv for tomorrow
+      async function getUvForTomorrow() {
+        let response = await fetch("/users/read/uv-tomorrow", {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            "x-auth": window.localStorage.getItem("authToken")
+          }
+        });
+
+        let data = await response.json();
+        return data;
+      }
+      getUvForTomorrow().then(res => {
+        let uvForMissingDay = res.message;
+        populateWeatherForecastTable(
+          weatherForecastdata.forecastDays,
+          uvForecastData,
+          uvForMissingDay
+        );
+      });
     })
     .fail(function(jqXHR, textStatus, errorThrown) {
       console.log(errorThrown);
@@ -34,7 +52,11 @@ function getForecastDataError(jqXHR, textStatus, errorThrown) {
 }
 
 // Create tables to display the forecast for each weekday
-function populateWeatherForecastTable(weatherForecastdata, uvForecastData) {
+function populateWeatherForecastTable(
+  weatherForecastdata,
+  uvForecastData,
+  uvForMissingDay
+) {
   // Create header row
   let outerDocumentFragment = document.createDocumentFragment();
   for (day in weatherForecastdata) {
@@ -68,6 +90,12 @@ function populateWeatherForecastTable(weatherForecastdata, uvForecastData) {
       $(".description").html(description);
       $(".temperature").html(temperature + "&#176; K");
       $(".humidity").html(humidity);
+
+      // Check if uv forecast includes tomorrow
+      if (!(day in uvForecastData)) {
+        uvForecastData[day] = uvForMissingDay[day];
+      }
+
       $(".uv").html(uvForecastData[day][0].value);
 
       let dataTemplateRow = $(".data_row");
@@ -96,4 +124,19 @@ function formatAMPM(date) {
   minutes = minutes < 10 ? "0" + minutes : minutes;
   var strTime = hours + ":" + minutes + " " + ampm;
   return strTime;
+}
+
+// Given a number from 0 - 6, returns the day of the week corresponding to that number with Sunday being 0 and Saturday being 6
+function getDayOfWeek(dayOfWeek) {
+  return isNaN(dayOfWeek)
+    ? null
+    : [
+        "Sunday",
+        "Monday",
+        "Tuesday",
+        "Wednesday",
+        "Thursday",
+        "Friday",
+        "Saturday"
+      ][dayOfWeek];
 }

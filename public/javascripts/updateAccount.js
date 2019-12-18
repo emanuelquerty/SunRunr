@@ -277,7 +277,7 @@ function passwordUpdateError(jqXHR, textStatus, errorThrown) {
 /***************************************   Add new device in the list of devices  ************************************/
 function addNewDevice(data) {
   $.ajax({
-    url: "/devices/update",
+    url: "/devices/add",
     type: "PUT",
     contentType: "application/json",
     headers: { "x-auth": window.localStorage.getItem("authToken") },
@@ -304,7 +304,7 @@ function addNewDeviceError(jqXHR, textStatus, errorThrown) {
 /**************************************   Replace a device with a new one       ****************************************/
 function replaceDeviceWithNew(data) {
   $.ajax({
-    url: "/devices/update",
+    url: "/devices/replace",
     type: "PUT",
     contentType: "application/json",
     headers: { "x-auth": window.localStorage.getItem("authToken") },

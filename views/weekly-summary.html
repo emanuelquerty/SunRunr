@@ -24,6 +24,9 @@
     <link href="/stylesheets/home.css" rel="stylesheet" />
     <link href="/stylesheets/weekly-summary.css" rel="stylesheet" />
 
+    <!-- Chart.js CDN -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.min.js"></script>
+
     <!-- Local Javascript -->
     <script src="/javascripts/home.js" defer></script>
     <script src="/javascripts/weekly-summary.js" defer></script>
@@ -109,6 +112,18 @@
             </div>
             <div class="col l8 m12 s12 right-panel">
                 <h4>Weekly Summary</h4>
+
+                <div class="container-wrapper">
+                    <canvas id="activity-duration"></canvas>
+                </div>
+
+                <div class="container-wrapper">
+                    <canvas id="uv-exposure"></canvas>
+                </div>
+
+                <div class="container-wrapper">
+                    <canvas id="calories-burned"></canvas>
+                </div>
             </div>
         </div>
     </main>

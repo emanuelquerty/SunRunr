@@ -21,6 +21,7 @@ router.put("/update", userRoutes.postUserUpdate);
 router.get("/weather-forecast", userRoutes.getWeatherForecast);
 router.get("/read/weather-forecast", userRoutes.getWeatherForecastData);
 router.get("/read/uv-forecast", userRoutes.getUvForecastData);
+router.get("/read/uv-tomorrow", userRoutes.getTomorrowUvData);
 
 /********************* Routes for activities summary */
 router.get("/activities-summary", userRoutes.getActivitiesSummary);

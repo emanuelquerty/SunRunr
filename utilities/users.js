@@ -11,18 +11,6 @@ exports.getNewApikey = function getNewApikey() {
   return newApikey;
 };
 
-// Given a Date object, returns the time in am/pm format
-function formatAMPM(date) {
-  var hours = date.getHours();
-  var minutes = date.getMinutes();
-  var ampm = hours >= 12 ? "pm" : "am";
-  hours = hours % 12;
-  hours = hours ? hours : 12; // the hour '0' should be '12'
-  minutes = minutes < 10 ? "0" + minutes : minutes;
-  var strTime = hours + ":" + minutes + " " + ampm;
-  return strTime;
-}
-
 // Given a number from 0 - 6, returns the day of the week corresponding to that number with Sunday being 0 and Saturday being 6
 function getDayOfWeek(dayOfWeek) {
   return isNaN(dayOfWeek)

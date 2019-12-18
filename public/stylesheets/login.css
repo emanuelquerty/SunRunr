@@ -3,8 +3,23 @@
   font-family: Arial, Helvetica, sans-serif;
 }
 
+html {
+  font-size: 100%;
+}
+
 body {
   background-color: #222;
+}
+
+.container {
+  height: 100vh;
+}
+
+.form {
+  width: 30rem;
+  background: #f1c40f;
+  padding: 20px 20px 50px 20px;
+  margin: 6% auto;
 }
 
 .form-title {
@@ -29,7 +44,7 @@ input[type="password"] {
   display: block;
   width: 100%;
   padding: 10px;
-  font-size: 16px;
+  font-size: 1rem;
   margin-bottom: 10px;
   border-bottom: 4px solid #888;
   border-bottom-left-radius: 10px;
@@ -46,7 +61,7 @@ input[type="password"]:focus {
 }
 
 input[type="submit"] {
-  margin-top: 16px;
+  margin-top: 1rem;
   width: 100%;
   height: 40px;
   -webkit-appearance: none;
@@ -65,13 +80,6 @@ label {
   padding: 5px;
   color: #444;
   font-weight: bold;
-}
-
-.form {
-  width: 42%;
-  background: #f1c40f;
-  padding: 20px 20px 50px 20px;
-  margin: 6% auto;
 }
 
 #already-registered {

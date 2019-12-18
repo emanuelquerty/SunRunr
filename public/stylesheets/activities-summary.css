@@ -5,19 +5,30 @@
 
 h4 {
   font-size: 1.4rem;
+  margin-left: 3rem;
+}
+
+.btn-small {
+  background: #f1c40f;
+  margin-top: 1rem;
+}
+
+.btn-small:hover {
+  background: #f1cf45;
 }
 
 .activity-container {
-  margin-top: 2rem;
   border: 1px solid #ccc;
   box-shadow: 0.01rem 0.01rem 0.1rem 0rem #999;
-  height: 30rem;
+  height: 18rem;
+  width: 36rem;
+  margin: 2rem 0 0 3rem;
 }
 
 .activity-header {
-  padding: 1rem 2rem;
+  padding: 1rem 1.3rem;
   border-bottom: 1px solid #ccc;
-  height: 8rem;
+  height: 6rem;
 }
 
 .activity-header-values,
@@ -26,5 +37,83 @@ h4 {
 }
 
 .activity-body {
-  padding: 1rem 2rem;
+  padding: 0rem 2rem;
+}
+
+/*********************************** Media Queries Start Here **************************************/
+
+@media screen and (max-width: 992px) {
+  .right-panel {
+    margin-left: 0rem !important;
+    margin-right: 9rem !important;
+  }
+}
+
+@media screen and (max-width: 761px) {
+  .right-panel {
+    padding: 1rem 0rem !important;
+  }
+
+  .activity-container {
+    width: 30rem;
+  }
+}
+
+@media screen and (max-width: 557px) {
+  main {
+    padding: 0rem;
+  }
+
+  .right-panel {
+    padding: 1rem 0rem !important;
+  }
+
+  .activity-container {
+    width: 90%;
+    margin: 2rem 0 0 5%;
+  }
+}
+
+@media screen and (max-width: 409px) {
+  .btn-small {
+    width: 4rem;
+    padding: 0.1rem;
+    font-size: 0.7rem !important;
+    margin-left: 1rem;
+  }
+
+  h6 {
+    font-size: 1rem;
+  }
+
+  .activity-header {
+    padding: 1rem;
+  }
+}
+
+@media screen and (max-width: 359px) {
+  .btn-small {
+    width: 4rem;
+    padding: 0.1rem;
+    font-size: 0.7rem !important;
+    margin-left: 0rem;
+  }
+
+  h6 {
+    font-size: 1rem;
+  }
+
+  .activity-header {
+    padding: 0.2rem;
+  }
+
+  .activity-body {
+    padding: 1rem;
+  }
+}
+
+@media screen and (max-width: 319px) {
+  html {
+    font-size: 70%;
+  }
 }

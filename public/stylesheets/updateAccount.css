@@ -123,6 +123,10 @@ h4 {
   #account-info-collection li:last-child {
     height: 7rem;
   }
+
+  .info-update-container {
+    width: 28rem;
+  }
 }
 
 @media screen and (max-width: 992px) {
@@ -133,18 +137,37 @@ h4 {
     margin-left: 0rem !important;
     border: none;
   }
+
+  .collection-item {
+    height: 4rem;
+    margin-top: 1.5rem !important;
+  }
 }
 
 @media screen and (max-width: 660px) {
   main {
     padding: 1rem;
   }
+
+  .info-update-container {
+    width: 28rem;
+    left: 8rem;
+  }
 }
 
 @media screen and (max-width: 550px) {
   html {
-    font-size: 70%;
+    font-size: 80%;
   }
+
+  main {
+    padding: 0;
+  }
+
+  /* .right-panel {
+    margin: 0 !important;
+    padding: 0rem !important;
+  } */
 }
 
 @media screen and (max-width: 445px) {
@@ -167,6 +190,24 @@ h4 {
 
 @media screen and (max-width: 399px) {
   html {
-    font-size: 62.5%;
+    font-size: 60%;
+  }
+
+  .info-update-container {
+    left: 4rem;
+    width: 24rem;
+  }
+
+  .btn,
+  .btn-small {
+    font-size: 0.8rem !important;
+  }
+
+  .material-icons {
+    display: none;
+  }
+
+  .account-info-span {
+    left: 50%;
   }
 }

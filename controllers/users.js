@@ -428,6 +428,48 @@ exports.getUvForecastData = function(req, res) {
   }
 };
 
+// Sometimes at some point in the day, uv forecast won't fetch tomorrow forecast, so we fetch tomorrow forecast separetly
+exports.getTomorrowUvData = function(req, res) {
+  // Check for authentication token in x-auth header
+  if (!req.headers["x-auth"]) {
+    return res.redirect("/");
+  }
+  // Authenticatin token is set
+  var authToken = req.headers["x-auth"];
+
+  try {
+    let secret = fs
+      .readFileSync(path.join(__dirname, "..", "..", "jwtSecretkey.txt"))
+      .toString();
+    let decodedToken = jwt.decode(authToken, secret);
+
+    // Get the most recent activity
+    ActivityModel.find()
+      .sort({ created_at: "desc" })
+      .exec()
+      .then(activities => {
+        let mostRecentActivity = activities[0];
+        let lat = mostRecentActivity.dataEverySetInterval[0].latitude;
+        let lon = mostRecentActivity.dataEverySetInterval[0].longitude;
+        // Fetch the 5 days ahead uv forecast
+        let uvForecastUrl = `https://api.openweathermap.org/data/2.5/uvi?lat=${lat}&lon=${lon}&appid=045d7a604186991f3a06dfec6589cee1&cnt=4`;
+        fetch(uvForecastUrl)
+          .then(response => response.json())
+          .then(response => {
+            let uvForecastDay = utilities.getForecastDays([response], "uv");
+            res.status(201).json({ success: true, message: uvForecastDay });
+          })
+          .catch(error => {
+            console.log(error);
+          });
+      });
+  } catch (ex) {
+    return res
+      .status(401)
+      .json({ success: false, message: "Invalid authentication token." });
+  }
+};
+
 // Load activities-summary.html
 exports.getActivitiesSummary = function(req, res) {
   res.sendFile(path.join(__dirname, "..", "views", "activities-summary.html"));

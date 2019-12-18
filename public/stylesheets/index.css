@@ -83,3 +83,27 @@ p {
   background-color: #ddb411;
   color: #000;
 }
+
+/* *********************************** Media Queries Start Here *********************************** */
+
+@media screen and (max-width: 491px) {
+  #container__text-box {
+    width: 30rem;
+  }
+
+  #container__text-box h1 {
+    font-size: 4rem;
+    letter-spacing: 1.7rem;
+  }
+}
+
+@media screen and (max-width: 339px) {
+  #container__text-box {
+    width: 26rem;
+  }
+
+  #container__text-box h1 {
+    font-size: 3rem;
+    letter-spacing: 1.8rem;
+  }
+}

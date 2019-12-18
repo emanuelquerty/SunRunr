@@ -6,3 +6,31 @@
 h4 {
   font-size: 1.4rem;
 }
+
+.container-wrapper {
+  padding: 3rem 0;
+}
+
+@media screen and (max-width: 992px) {
+  .right-panel {
+    padding: 1rem 1rem !important;
+    margin-left: 0rem !important;
+  }
+}
+
+@media screen and (max-width: 531px) {
+  main {
+    padding: 0rem !important;
+  }
+}
+
+/* @media screen and (max-width: 531px) {
+  main {
+    padding: 2rem !important;
+  }
+
+  .right-panel {
+    padding: 1rem 0.5rem !important;
+    margin-left: 0rem !important;
+  }
+} */
