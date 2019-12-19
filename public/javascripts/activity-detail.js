@@ -125,10 +125,12 @@ $(".btn-change").click(function() {
     console.log(activityType);
 
     let obj = { activityType: activityType, created_at: created_at };
-    changeActivityType("/activities/changed_activity_type", obj).then(res => {
-      console.log(res.json);
+    changeActivityType("/activities/change_activity_type", obj).then(res => {
+      console.log(res);
     });
   }
+
+  $(".info-update-container").hide();
 });
 
 async function changeActivityType(url, obj) {

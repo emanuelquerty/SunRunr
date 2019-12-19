@@ -183,7 +183,7 @@ exports.changeActivityType = function(req, res) {
       );
     } catch (ex) {
       return res
-        .status(401)
+        .status(201)
         .json({ success: false, message: "Invalid authentication token." });
     }
   } else {

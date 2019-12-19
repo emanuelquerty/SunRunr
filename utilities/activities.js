@@ -64,7 +64,7 @@ exports.constructAndSaveActivityModel = function(data, res) {
             humidity,
             activityType,
             deviceId: data.deviceId,
-            created_at: new Date().setDate(new Date().getDate() - 5), // in milliseconds
+            created_at: new Date(), // in milliseconds
             email: device.email
           };
 

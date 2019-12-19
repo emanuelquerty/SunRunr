@@ -15,3 +15,11 @@ Database:
 - The app uses mongodb database
 
 - To run the app, first create a jwtSecretKey.txt with a random key for json web token (JWT) in a director above the app's directory. Then you can run the app on your local machine!
+
+- url: http://ec2-18-224-200-150.us-east-2.compute.amazonaws.com:3000/
+
+- Existing User Credentials
+
+- email: test@test.com
+
+-password: Lealdade2600
