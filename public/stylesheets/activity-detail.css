@@ -1,8 +1,38 @@
 .right-panel {
   height: initial;
-  padding-top: 3rem !important;
 }
 
 .extra-activity-details {
   padding: 2rem !important;
+}
+
+.btn-change-activity-type {
+  background: #f1c40f !important;
+  color: #000;
+  margin-left: 3rem;
+}
+
+.btn-change {
+  background: #f1c40f !important;
+  color: #000;
+}
+
+.btn-cancel {
+  background: #4caf50 !important;
+}
+
+.btn-change-activity-type:hover,
+.btn-change:hover {
+  background: #f1cf45;
+}
+
+.info-update-container {
+  padding: 1rem 2rem;
+  background: #ecf39f;
+  width: 30rem;
+  box-shadow: 0.05rem 0.05rem 0.2rem 0.1rem #999;
+  position: absolute;
+  top: 20rem;
+  left: 30%;
+  display: none;
 }

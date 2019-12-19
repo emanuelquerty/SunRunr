@@ -104,3 +104,16 @@ function round(num, places) {
   var multiplier = Math.pow(10, places);
   return Math.round(num * multiplier) / multiplier;
 }
+
+// Change Activity Type on user press
+$(".btn-change-activity-type").click(function() {
+  $(".info-update-container").show();
+});
+
+$(".btn-cancel").click(function() {
+  $(".info-update-container").hide();
+});
+
+$(".btn-change").click(function() {
+  let activityType = $("#change-activity-type").val();
+});

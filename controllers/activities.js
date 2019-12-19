@@ -9,6 +9,7 @@ let jwt = require("jwt-simple");
 
 exports.postActivityCreate = function(req, res, next) {
   let data = req.body;
+  console.log(data);
 
   if (
     data.hasOwnProperty("dataEverySetInterval") &&
