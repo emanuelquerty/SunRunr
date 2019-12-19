@@ -79,6 +79,7 @@ exports.constructAndSaveActivityModel = function(data, res) {
                 .json({ success: true, msg: "Activity Successfully Saved!" });
             })
             .catch(error => {
+              console.log(error);
               res.status(500).json({
                 success: false,
                 msg: "Could not save the activity. Please contact support."
