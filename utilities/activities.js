@@ -37,8 +37,8 @@ exports.constructAndSaveActivityModel = function(data, res) {
   }
 
   // Finally fecth humidity and temperature
-  let lat = dataEverySetInterval[0].lat;
-  let lon = dataEverySetInterval[0].lon;
+  let lat = dataEverySetInterval[0].latitude;
+  let lon = dataEverySetInterval[0].longitude;
 
   // Fetch the 5 days ahead weather forecast
   let currentWeatherUrl = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=045d7a604186991f3a06dfec6589cee1`;
@@ -79,7 +79,6 @@ exports.constructAndSaveActivityModel = function(data, res) {
                 .json({ success: true, msg: "Activity Successfully Saved!" });
             })
             .catch(error => {
-              console.log(error);
               res.status(500).json({
                 success: false,
                 msg: "Could not save the activity. Please contact support."
