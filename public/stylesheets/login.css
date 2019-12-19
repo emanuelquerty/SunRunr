@@ -1,6 +1,8 @@
 * {
-  box-sizing: border-box;
   font-family: Arial, Helvetica, sans-serif;
+  margin: 0;
+  padding: 0;
+  box-sizing: inherit;
 }
 
 html {
@@ -9,6 +11,7 @@ html {
 
 body {
   background-color: #222;
+  box-sizing: border-box;
 }
 
 .container {
@@ -19,7 +22,7 @@ body {
   width: 30rem;
   background: #f1c40f;
   padding: 20px 20px 50px 20px;
-  margin: 6% auto;
+  margin: 3rem auto;
 }
 
 .form-title {

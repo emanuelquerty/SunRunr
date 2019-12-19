@@ -2,6 +2,7 @@ let fs = require("fs");
 let path = require("path");
 let jwt = require("jwt-simple");
 let DeviceModel = require("../models/devices");
+let UserModel = require("../models/users");
 let userUtilities = require("../utilities/users");
 
 // Middleware for replacing a device with a new one
@@ -87,5 +88,40 @@ exports.putDeviceAdd = function(req, res, next) {
     }
   } else {
     console.log("Invalid data format or missing one or more properties!");
+  }
+};
+
+// Get UV Threshold
+exports.getUvThreshold = function(req, res) {
+  if (
+    req.body.hasOwnProperty("apiKey") &&
+    req.body.hasOwnProperty("deviceId")
+  ) {
+    DeviceModel.findOne({ deviceId: req.body.deviceId }, function(
+      error,
+      device
+    ) {
+      if (error) {
+        console.log(error);
+      } else {
+        let email = device.email;
+
+        UserModel.findOne({ email: email }, function(error, user) {
+          if (error) {
+            console.log(error);
+          } else {
+            res
+              .status(201)
+              .json({ success: true, uv_threshold: user.UV_threshold });
+          }
+        });
+      }
+    });
+  } else {
+    res.status(401).json({
+      success: false,
+      msg: "invalid object format",
+      correctFormat: { apiKey: "API KEY VALUE", deviceId: "DEVICE ID VALUE" }
+    });
   }
 };

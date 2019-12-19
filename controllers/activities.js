@@ -92,3 +92,39 @@ exports.getActivitiesRead = function(req, res) {
       .json({ success: false, message: "Invalid authentication token." });
   }
 };
+
+exports.getActivityRead = function(req, res) {
+  // Check for authentication token in x-auth header
+  if (!req.headers["x-auth"]) {
+    return res.redirect("/");
+  }
+  // Authenticatin token is set
+  var authToken = req.headers["x-auth"];
+  //   console.log(authToken);
+
+  try {
+    let secret = fs
+      .readFileSync(path.join(__dirname, "..", "..", "jwtSecretkey.txt"))
+      .toString();
+    let decodedToken = jwt.decode(authToken, secret);
+
+    // Get the activity created_At
+    let created_at = req.params.created_at;
+
+    // Get all activities for this user
+    ActivityModel.findOne({ created_at: created_at }, function(
+      error,
+      activity
+    ) {
+      if (error) {
+        console.log(error);
+      } else {
+        res.status(201).json({ success: true, activity: activity });
+      }
+    });
+  } catch (ex) {
+    return res
+      .status(401)
+      .json({ success: false, message: "Invalid authentication token." });
+  }
+};

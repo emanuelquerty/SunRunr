@@ -22,10 +22,16 @@
 
     <!-- Local CSS -->
     <link href="/stylesheets/home.css" rel="stylesheet" />
+    <link href="/stylesheets/activity-detail.css" rel="stylesheet" />
+
+    <!-- Chart.js CDN -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.min.js"></script>
+
 
     <!-- Local Javascript -->
     <script src="/javascripts/home.js" defer></script>
-    <title>Home</title>
+    <script src="/javascripts/activity-detail.js" defer></script>
+    <title> Activity Detail</title>
 </head>
 
 <body>
@@ -111,7 +117,29 @@
                     Summary
                 </a>
             </div>
-            <div class="col l8 m12 s12 right-panel"></div>
+            <div class="col l8 m12 s12 right-panel">
+                <canvas id="activity-detail-chart"></canvas>
+
+                <div class="row">
+                    <div class="col l6 m6 s6">
+                        <div class="extra-activity-details">
+                            <p id="date"><b>Date:</b> <span id="date-val"></span> </p>
+                            <p id="duration"><b>Duration:</b> <span id="duration-val"></span> </p>
+                            <p id="uv-exposure"><b>UV exposure:</b> <span id="uv-val"></span> </p>
+                            <p id="speed"><b>Average Speed:</b> <span id="speed-val"></span> </p>
+
+                        </div>
+                    </div>
+                    <div class="col l6 m6 s6">
+                        <div class="extra-activity-details">
+                            <p id="temperature"><b>Temperature:</b> <span id="temperature-val"></span> </p>
+                            <p id="humidity"><b>Humidity:</b> <span id="humidity-val"></span> </p>
+                            <p id="activity-type"><b>Activity Type:</b> <span id="activity-type-val"></span> </p>
+                            <p id="calories-burned"><b>Calories Burned:</b> <span id="calories-burned-val"></span> </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </main>
 </body>

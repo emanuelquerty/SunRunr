@@ -31,33 +31,39 @@
 </head>
 
 <body>
-    <header class="main-header navbar-fixed">
-        <!-- Dropdown Structure -->
-        <ul id="dropdown1" class="dropdown-content">
-            <li><a id="update-account" href="/users/update">Update Account Information</a></li>
-            <li class="divider"></li>
-            <li><a class="logout-btn" href="#">Logout</a></li>
-        </ul>
-        <nav>
-            <div class="nav-wrapper">
-                <a href="#!" class="brand-logo">SunRunr</a>
-                <a href="#" data-target="mobile-demo" class="sidenav-trigger"><i class="material-icons">menu</i></a>
-                <ul class="right hide-on-med-and-down">
-                    <li>
-                        <a id="welcome-username-btn" href="/home">Welcome @username</a>
-                    </li>
-                    <!-- Dropdown Trigger -->
-                    <li>
-                        <a class="dropdown-trigger" href="#!" data-target="dropdown1">Settings<i
-                                class="material-icons right">arrow_drop_down</i></a>
-                    </li>
-                </ul>
-            </div>
-        </nav>
-
+    <header class="main-header">
+        <div class="navbar-fixed">
+            <!-- Dropdown Structure -->
+            <ul id="dropdown1" class="dropdown-content">
+                <li><a id="update-account" href="/users/update">Update Account Information</a></li>
+                <li class="divider"></li>
+                <li><a class="logout-btn" href="#">Logout</a></li>
+            </ul>
+            <nav>
+                <div class="nav-wrapper ">
+                    <a href="#!" class="brand-logo">SunRunr</a>
+                    <a href="#" data-target="mobile-demo" class="sidenav-trigger"><i class="material-icons">menu</i></a>
+                    <ul class="right hide-on-med-and-down">
+                        <li>
+                            <a id="welcome-username-btn" href="/home">Welcome @username</a>
+                        </li>
+                        <!-- Dropdown Trigger -->
+                        <li>
+                            <a class="dropdown-trigger" href="#!" data-target="dropdown1">Settings<i
+                                    class="material-icons right">arrow_drop_down</i></a>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+        </div>
         <ul class="sidenav" id="mobile-demo">
             <li>
                 <a class="left-panel-link" href="/home"><i class="material-icons home-icon">home</i> Home
+                </a>
+            </li>
+            <li>
+                <a class="left-panel-link" href="/users/update"><i
+                        class="material-icons account-info-icon">account_circle</i> Account Settings
                 </a>
             </li>
             <li>

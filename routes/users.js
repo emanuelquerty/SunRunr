@@ -26,7 +26,13 @@ router.get("/read/uv-tomorrow", userRoutes.getTomorrowUvData);
 /********************* Routes for activities summary */
 router.get("/activities-summary", userRoutes.getActivitiesSummary);
 
+/********************* Routes for activity detail */
+router.get("/activity-detail/:created_at", userRoutes.getActivityDetail);
+
 /********************* Routes for activities summary */
 router.get("/weekly-summary", userRoutes.getWeeklySummary);
+
+/********************* Routes for getting UV Threshold from the device */
+router.get("/uv_threshold", userRoutes.getUvThreshold);
 
 module.exports = router;

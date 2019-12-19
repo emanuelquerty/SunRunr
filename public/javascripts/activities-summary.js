@@ -22,7 +22,7 @@ async function getActivities() {
 // Get all activities
 getActivities().then(res => {
   let activities = res.message;
-  console.log(activities);
+  // console.log(activities);
 
   let docFragment = document.createDocumentFragment();
   // Display all activities
@@ -36,6 +36,21 @@ getActivities().then(res => {
     let uvExposure = document.querySelector(".uv-exposure");
     let temperature = document.querySelector(".temperature");
     let humidity = document.querySelector(".humidity");
+
+    console.log(activities[i].created_at);
+
+    // Set the url for the activity button to include the created_at
+    let activityCreatedAt = new Date(activities[i].created_at);
+    let link = document.querySelector(".activity-detail-btn");
+    link.href = "/users/activity-detail/" + activityCreatedAt.getTime();
+
+    link.addEventListener("click", function(e) {
+      // Set the activity timestamp in local storage to identify activity in activity detail javascript page
+      window.localStorage.setItem(
+        "activity created_at",
+        activityCreatedAt.getTime()
+      );
+    });
 
     // Set all info for each element
     duration.innerHTML =

@@ -475,7 +475,47 @@ exports.getActivitiesSummary = function(req, res) {
   res.sendFile(path.join(__dirname, "..", "views", "activities-summary.html"));
 };
 
+// Load activity-detail.html
+exports.getActivityDetail = function(req, res) {
+  res.sendFile(path.join(__dirname, "..", "views", "activity-detail.html"));
+};
+
 // Load weekly-summary.html
 exports.getWeeklySummary = function(req, res) {
   res.sendFile(path.join(__dirname, "..", "views", "weekly-summary.html"));
+};
+
+// Get UV Threshold
+exports.getUvThreshold = function(req, res) {
+  if (
+    req.body.hasOwnProperty("apiKey") &&
+    req.body.hasOwnProperty("deviceId")
+  ) {
+    DeviceModel.findOne({ deviceId: req.body.deviceId }, function(
+      error,
+      device
+    ) {
+      if (error) {
+        console.log(error);
+      } else {
+        let email = device.email;
+
+        UserModel.findOne({ email: email }, function(error, user) {
+          if (error) {
+            console.log(error);
+          } else {
+            res
+              .status(201)
+              .json({ success: true, uv_threshold: user.UV_threshold });
+          }
+        });
+      }
+    });
+  } else {
+    res.status(401).json({
+      success: false,
+      msg: "invalid object format",
+      correctFormat: { apiKey: "API KEY VALUE", deviceId: "DEVICE ID VALUE" }
+    });
+  }
 };

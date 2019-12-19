@@ -10,18 +10,6 @@ html {
 }
 
 body {
-  /* background-color: #222; */
-  /* background: linear-gradient(
-        to right bottom,
-        #f1c40f9c,
-        rgba(255, 255, 0, 0.452)
-      )
-      fixed,
-    url("/images/landscape.jpg");
-  background-repeat: no-repeat;
-  background-position: top;
-  background-size: cover; */
-
   padding: 0 0 3rem 0;
   box-sizing: border-box; /* Border and Padding won't be added to total width and height of an element*/
 }

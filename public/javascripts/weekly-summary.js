@@ -45,7 +45,7 @@ getActivities().then(data => {
     dailyKeys.unshift(someDayAgoKey);
   }
 
-  console.log(dailyKeys);
+  // console.log(dailyKeys);
   //   console.log(activities);
 
   // Get all activities over last 7 days (group activities by day)
@@ -141,8 +141,8 @@ getActivities().then(data => {
     "Total Weekly Calories Burned: " + totalWeeklyCaloriesBurned + " calories"
   );
 
-  console.log(dailyDurationvalues);
-  console.log(lastSevenDaysActivities);
+  // console.log(dailyDurationvalues);
+  // console.log(lastSevenDaysActivities);
 });
 
 // Given a number from 0 - 6, returns the day of the week corresponding to that number with Sunday being 0 and Saturday being 6
@@ -164,7 +164,7 @@ function getDayOfWeek(dayOfWeek) {
 function displayChart(canvasId, labels, data, bgColor, label, title) {
   let chart = document.getElementById(canvasId).getContext("2d");
   let massPopChart = new Chart(chart, {
-    type: "bar", // bar, horizontal, pie, line, doughnut, radar, polarArea
+    type: "line", // bar, horizontal, pie, line, doughnut, radar, polarArea
     data: {
       labels: labels,
       datasets: [
