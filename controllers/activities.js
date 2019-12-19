@@ -9,8 +9,6 @@ let jwt = require("jwt-simple");
 
 exports.postActivityCreate = function(req, res, next) {
   let data = req.body;
-  console.log(data);
-
   if (
     data.hasOwnProperty("dataEverySetInterval") &&
     data.hasOwnProperty("uv_exposure") &&
@@ -77,16 +75,15 @@ exports.getActivitiesRead = function(req, res) {
     let decodedToken = jwt.decode(authToken, secret);
 
     // Get all activities for this user
-    ActivityModel.find({ email: decodedToken.email }, function(
-      error,
-      activities
-    ) {
-      if (error) {
-        console.log(error);
-      } else {
-        res.status(201).json({ success: true, message: activities });
-      }
-    });
+    ActivityModel.find({ email: decodedToken.email })
+      .sort({ created_at: -1 })
+      .exec(function(error, activities) {
+        if (error) {
+          console.log(error);
+        } else {
+          res.status(201).json({ success: true, message: activities });
+        }
+      });
   } catch (ex) {
     return res
       .status(401)
@@ -142,7 +139,8 @@ exports.changeActivityType = function(req, res) {
 
   if (
     req.body.hasOwnProperty("activityType") &&
-    req.body.hasOwnProperty("created_at")
+    req.body.hasOwnProperty("created_at") &&
+    req.body.hasOwnProperty("distance_travelled")
   ) {
     try {
       let secret = fs
@@ -152,6 +150,7 @@ exports.changeActivityType = function(req, res) {
 
       let activityType = req.body.activityType;
       let created_at = req.body.created_at;
+      let distance_travelled = req.body.distance_travelled;
 
       // Find calories burned from distance travelled (assuming activity type from average speed)
       let caloriesBurned = 0;
@@ -168,7 +167,7 @@ exports.changeActivityType = function(req, res) {
 
       ActivityModel.findOneAndUpdate(
         { created_at: created_at },
-        { activityType, created_at },
+        { activityType, caloriesBurned },
         { useFindAndModify: false },
         function(err, activity) {
           if (err) {
@@ -176,12 +175,14 @@ exports.changeActivityType = function(req, res) {
           } else {
             res.status(201).json({
               success: true,
-              msg: "Changed Activity Type Successfull"
+              msg: "Changed Activity Type Successfull",
+              data: { activityType, caloriesBurned }
             });
           }
         }
       );
     } catch (ex) {
+      console.log(ex);
       return res
         .status(201)
         .json({ success: false, message: "Invalid authentication token." });

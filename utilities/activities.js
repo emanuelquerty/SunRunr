@@ -16,6 +16,9 @@ exports.constructAndSaveActivityModel = function(data, res) {
   let activityDurationInHours = data.activityDuration / 1000 / 3600;
   let distance_travelled = average_speed * activityDurationInHours;
 
+  console.log(activityDurationInHours);
+  console.log(distance_travelled);
+
   // Assume activity type from average speed (in miles per hour)
   let activityType = "";
   if (average_speed <= 4) {
@@ -56,7 +59,7 @@ exports.constructAndSaveActivityModel = function(data, res) {
         } else {
           let ActivityModelObject = {
             dataEverySetInterval,
-            average_speed,
+            average_speed, // miles per hour
             uv_exposure: data.uv_exposure,
             activityDuration: data.activityDuration, // in milliseconds
             caloriesBurned,

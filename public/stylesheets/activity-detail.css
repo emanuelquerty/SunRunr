@@ -36,3 +36,29 @@
   left: 30%;
   display: none;
 }
+
+@media screen and (max-width: 764px) {
+  .info-update-container {
+    left: 10%;
+    display: none;
+  }
+}
+
+@media screen and (max-width: 513px) {
+  .info-update-container {
+    width: 25rem;
+  }
+}
+
+@media screen and (max-width: 413px) {
+  .info-update-container {
+    left: 4%;
+  }
+}
+
+@media screen and (max-width: 377px) {
+  .info-update-container {
+    width: 90%;
+    padding: 1rem;
+  }
+}

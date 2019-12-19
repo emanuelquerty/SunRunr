@@ -37,8 +37,6 @@ getActivities().then(res => {
     let temperature = document.querySelector(".temperature");
     let humidity = document.querySelector(".humidity");
 
-    console.log(activities[i].created_at);
-
     // Set the url for the activity button to include the created_at
     let activityCreatedAt = new Date(activities[i].created_at);
     let link = document.querySelector(".activity-detail-btn");

@@ -11,6 +11,7 @@ let url = window.location.href;
 let url_array = url.split("/");
 let created_at = url_array[url_array.length - 1];
 let date = new Date(parseInt(created_at)).toISOString();
+let activity;
 
 async function getActivity() {
   let response = await fetch(`/activities/read/${date}`, {
@@ -27,10 +28,8 @@ async function getActivity() {
 
 getActivity().then(res => {
   // Display speed and uv exposure throughout the activity
-  let activity = res.activity;
-  console.log(activity);
+  activity = res.activity;
   let dataEverySetInterval = activity.dataEverySetInterval;
-  console.log(dataEverySetInterval);
 
   // Get the x values intervals for the graph and the y values (uv and gps speed)
   let uv_array = [0];
@@ -122,11 +121,19 @@ $(".btn-change").click(function() {
     activityType.toLowerCase() == "walking" ||
     activityType.toLowerCase() == "biking"
   ) {
-    console.log(activityType);
+    // Find the average speed in miles per hour (initially given in knots)
+    let activityDurationInHours = activity.activityDuration / 1000 / 3600;
+    let distance_travelled = activity.average_speed * activityDurationInHours;
 
-    let obj = { activityType: activityType, created_at: created_at };
+    let obj = {
+      activityType: activityType,
+      created_at: created_at,
+      distance_travelled
+    };
     changeActivityType("/activities/change_activity_type", obj).then(res => {
-      console.log(res);
+      // Update activity type and calories burned to display the new values
+      $("#activity-type-val").html(res.data.activityType);
+      $("#calories-burned-val").html(round(res.data.caloriesBurned, 3));
     });
   }
 
