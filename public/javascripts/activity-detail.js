@@ -116,4 +116,5 @@ $(".btn-cancel").click(function() {
 
 $(".btn-change").click(function() {
   let activityType = $("#change-activity-type").val();
+  console.log(activityType);
 });
