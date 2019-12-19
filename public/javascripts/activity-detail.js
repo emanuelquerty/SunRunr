@@ -116,5 +116,31 @@ $(".btn-cancel").click(function() {
 
 $(".btn-change").click(function() {
   let activityType = $("#change-activity-type").val();
-  console.log(activityType);
+
+  if (
+    activityType.toLowerCase() == "running" ||
+    activityType.toLowerCase() == "walking" ||
+    activityType.toLowerCase() == "biking"
+  ) {
+    console.log(activityType);
+
+    let obj = { activityType: activityType, created_at: created_at };
+    changeActivityType("/activities/changed_activity_type", obj).then(res => {
+      console.log(res.json);
+    });
+  }
 });
+
+async function changeActivityType(url, obj) {
+  let response = await fetch(url, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "x-auth": window.localStorage.getItem("authToken")
+    },
+    body: JSON.stringify(obj)
+  });
+
+  let data = await response.json();
+  return data;
+}

@@ -9,6 +9,8 @@ router.post("/create", activityRoutes.postActivityCreate);
 router.get("/read", activityRoutes.getActivitiesRead);
 router.get("/read/:created_at", activityRoutes.getActivityRead);
 
+router.get("/change_activity_type", activityRoutes.changeActivityType);
+
 // let correctFormat = {
 //   dataEverySetInterval: [
 //     {

@@ -129,3 +129,66 @@ exports.getActivityRead = function(req, res) {
       .json({ success: false, message: "Invalid authentication token." });
   }
 };
+
+// Change Activity Type
+exports.changeActivityType = function(req, res) {
+  // Check for authentication token in x-auth header
+  if (!req.headers["x-auth"]) {
+    return res.redirect("/");
+  }
+  // Authenticatin token is set
+  var authToken = req.headers["x-auth"];
+  //   console.log(authToken);
+
+  if (
+    req.body.hasOwnProperty("activityType") &&
+    req.body.hasOwnProperty("created_at")
+  ) {
+    try {
+      let secret = fs
+        .readFileSync(path.join(__dirname, "..", "..", "jwtSecretkey.txt"))
+        .toString();
+      let decodedToken = jwt.decode(authToken, secret);
+
+      let activityType = req.body.activityType;
+      let created_at = req.body.created_at;
+
+      // Find calories burned from distance travelled (assuming activity type from average speed)
+      let caloriesBurned = 0;
+      if (activityType.toLowerCase() === "walking") {
+        caloriesBurned = distance_travelled * 70;
+        activityType = "Walking";
+      } else if (activityType.toLowerCase() === "running") {
+        caloriesBurned = distance_travelled * 100;
+        activityType = "Running";
+      } else {
+        caloriesBurned = distance_travelled * 49;
+        activityType = "Biking";
+      }
+
+      ActivityModel.findOneAndUpdate(
+        { created_at: created_at },
+        { activityType, created_at },
+        { useFindAndModify: false },
+        function(err, activity) {
+          if (err) {
+            console.log(err);
+          } else {
+            res.status(201).json({
+              success: true,
+              msg: "Changed Activity Type Successfull"
+            });
+          }
+        }
+      );
+    } catch (ex) {
+      return res
+        .status(401)
+        .json({ success: false, message: "Invalid authentication token." });
+    }
+  } else {
+    console.log(
+      "incorrect json format. Missing activityType or created_at property"
+    );
+  }
+};
