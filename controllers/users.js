@@ -365,6 +365,9 @@ exports.getWeatherForecastData = function(req, res) {
         fetch(weatherForecastUrl)
           .then(response => response.json())
           .then(response => {
+            // Check response
+            console.log(response);
+
             let weatherForecastDays = utilities.getForecastDays(
               response,
               "weather"
@@ -412,8 +415,14 @@ exports.getUvForecastData = function(req, res) {
         // Fetch the 5 days ahead uv forecast
         let uvForecastUrl = `https://api.openweathermap.org/data/2.5/uvi/forecast?lat=${lat}&lon=${lon}&appid=045d7a604186991f3a06dfec6589cee1&cnt=4`;
         fetch(uvForecastUrl)
-          .then(response => response.json())
           .then(response => {
+            console.log(response);
+            return response.json();
+          })
+          .then(response => {
+            console.log("____________________");
+            console.log(response);
+
             let uvForecastDays = utilities.getForecastDays(response, "uv");
             res.status(201).json(uvForecastDays);
           })

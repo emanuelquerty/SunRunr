@@ -21,6 +21,8 @@ function getForecastDataSuccess(weatherForecastdata, textStatus, jqXHR) {
       // Sometimes at some time in the day, uv for tomorrow won't be returned
       //by the open weather map api because of timezone differences
       // Since we're displaying forecast for tomorrow as well, we need to ensure we have uv for tomorrow
+
+      console.log(uvForecastData);
       async function getUvForTomorrow() {
         let response = await fetch("/users/read/uv-tomorrow", {
           method: "GET",
