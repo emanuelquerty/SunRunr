@@ -97,3 +97,9 @@ label {
   color: green;
   font-weight: bold;
 }
+
+@media screen and (max-width: 539px) {
+  .form {
+    width: 94%;
+  }
+}
