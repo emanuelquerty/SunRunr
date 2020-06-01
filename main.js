@@ -12,7 +12,7 @@ let activitiesRouter = require("./routes/activities");
 
 app.use(express.static(path.join(__dirname, "public")));
 
-app.use("/home", function(req, res) {
+app.use("/home", function (req, res) {
   res.sendFile(path.join(__dirname, "views", "home.html"));
 });
 
@@ -20,7 +20,7 @@ app.use("/users", usersRouter);
 app.use("/devices", devicesRouter);
 app.use("/activities", activitiesRouter);
 
-app.use("/", function(req, res) {
+app.use("/", function (req, res) {
   res.sendFile(path.join(__dirname, "views", "index.html"));
 });
 

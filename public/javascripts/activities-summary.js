@@ -1,4 +1,4 @@
-$(function() {
+$(function () {
   // If authToken does not exists, redirect user to
   if (!window.localStorage.getItem("authToken")) {
     // Redirect user to account.html page
@@ -11,8 +11,8 @@ async function getActivities() {
     method: "GET",
     headers: {
       "Content-Type": "application/json",
-      "x-auth": window.localStorage.getItem("authToken")
-    }
+      "x-auth": window.localStorage.getItem("authToken"),
+    },
   });
 
   let data = await response.json();
@@ -20,7 +20,7 @@ async function getActivities() {
 }
 
 // Get all activities
-getActivities().then(res => {
+getActivities().then((res) => {
   let activities = res.message;
   // console.log(activities);
 
@@ -42,7 +42,7 @@ getActivities().then(res => {
     let link = document.querySelector(".activity-detail-btn");
     link.href = "/users/activity-detail/" + activityCreatedAt.getTime();
 
-    link.addEventListener("click", function(e) {
+    link.addEventListener("click", function (e) {
       // Set the activity timestamp in local storage to identify activity in activity detail javascript page
       window.localStorage.setItem(
         "activity created_at",
@@ -75,7 +75,13 @@ getActivities().then(res => {
     docFragment.appendChild(activityContainer);
   }
 
-  $(".allActivitiesContainer").html("");
+  if (activities.length === 0) {
+    $(".allActivitiesContainer").html(
+      "<p> No activities to show at this time! </p>"
+    );
+  } else {
+    $(".allActivitiesContainer").html("");
+  }
   $(".allActivitiesContainer").append(docFragment);
 });
 

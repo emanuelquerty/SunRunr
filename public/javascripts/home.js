@@ -1,5 +1,5 @@
 // Activate the sidenav and drop down from materialize
-$(document).ready(function() {
+$(document).ready(function () {
   $(".sidenav").sidenav();
   $(".dropdown-trigger").dropdown();
 });
@@ -9,9 +9,9 @@ if (!window.localStorage.getItem("authToken")) {
   window.location.replace("/");
 }
 
-$(function() {
+$(function () {
   // Handle logout
-  $(".logout-btn").click(function() {
+  $(".logout-btn").click(function () {
     window.localStorage.removeItem("authToken");
     window.location.replace("/");
   });
@@ -26,7 +26,7 @@ function sendReqForAccountInfo() {
     url: "/users/read",
     type: "GET",
     headers: { "x-auth": window.localStorage.getItem("authToken") },
-    dataType: "json"
+    dataType: "json",
   })
     .done(accountInfoSuccess)
     .fail(accountInfoError);
@@ -37,6 +37,7 @@ function accountInfoSuccess(data, textStatus, jqXHR) {
   let username = email.split("@")[0];
 
   $("#welcome-username-btn").html(`Welcome @${username}`);
+  $("#hello-message-username").html(`@${username}`);
 }
 function accountInfoError(jqXHR, textStatus, errorThrown) {
   console.log(errorThrown);

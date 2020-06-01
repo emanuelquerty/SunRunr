@@ -9,29 +9,29 @@ let jwt = require("jwt-simple");
 let fetch = require("node-fetch");
 
 // Send the register.html middleware
-exports.getUserRegister = function(req, res, next) {
+exports.getUserRegister = function (req, res, next) {
   res.sendFile(path.join(__dirname, "..", "views", "register.html"));
 };
 
 // Register a user middleware
-exports.postUserRegister = function(req, res, next) {
+exports.postUserRegister = function (req, res, next) {
   if (
     req.body.hasOwnProperty("email") &&
     req.body.hasOwnProperty("password") &&
     req.body.hasOwnProperty("deviceId")
   ) {
     // Check if there is already an account using the given email
-    UserModel.findOne({ email: req.body.email }, function(error, user) {
+    UserModel.findOne({ email: req.body.email }, function (error, user) {
       if (user) {
         return res.json({
           msg: "The email is aready associated with an account",
-          success: false
+          success: false,
         });
       }
 
       // // Ok to create the user with the given email
-      bcrypt.genSalt(10, function(err, salt) {
-        bcrypt.hash(req.body.password, salt, function(err, hash) {
+      bcrypt.genSalt(10, function (err, salt) {
+        bcrypt.hash(req.body.password, salt, function (err, hash) {
           if (err) {
             console.log(
               "ops ... something happended while trying to hash password"
@@ -42,15 +42,15 @@ exports.postUserRegister = function(req, res, next) {
           let newUser = new UserModel({
             email: req.body.email,
             hashedPassword: hash,
-            UV_threshold: 12 // When user registers, user is not asked for UV, so we just set it initially to 12
+            UV_threshold: 12, // When user registers, user is not asked for UV, so we just set it initially to 12
           });
 
-          newUser.save(function(error, User) {
+          newUser.save(function (error, User) {
             // Something happened with the server or database while creating the user
             if (error) {
               return res.json({
                 msg: "Error creating account. Please contact support.",
-                success: false
+                success: false,
               });
             }
 
@@ -59,20 +59,20 @@ exports.postUserRegister = function(req, res, next) {
             let newDevice = new DeviceModel({
               email: req.body.email,
               deviceId: req.body.deviceId,
-              apiKey: API_KEY
+              apiKey: API_KEY,
             });
 
             newDevice
               .save()
-              .then(device => {
+              .then((device) => {
                 // User created successfully
                 res.json({
                   msg: `Account Created Successfully.`,
                   success: true,
-                  apiKey: API_KEY
+                  apiKey: API_KEY,
                 });
               })
-              .catch(error => {
+              .catch((error) => {
                 console.log(error);
                 console.log("could not save new device!");
               });
@@ -84,38 +84,38 @@ exports.postUserRegister = function(req, res, next) {
 };
 
 // Send the user login page
-exports.getUserLogin = function(req, res) {
+exports.getUserLogin = function (req, res) {
   res.sendFile(path.join(__dirname, "..", "views", "login.html"));
 };
 
-exports.postUserLogin = function(req, res) {
+exports.postUserLogin = function (req, res) {
   if (req.body.hasOwnProperty("email") && req.body.hasOwnProperty("password")) {
     var email = req.body.email;
     var password = req.body.password;
 
-    UserModel.findOne({ email: email }, function(err, user) {
+    UserModel.findOne({ email: email }, function (err, user) {
       if (err) {
         res.status(401).json({
           success: false,
-          msg: "Error Authenticating. Please contact support."
+          msg: "Error Authenticating. Please contact support.",
         });
       } else {
         // Could not find a user with the givene email
         if (!user) {
           return res.status(201).json({
             success: false,
-            msg: "Email does not exist."
+            msg: "Email does not exist.",
           });
         }
 
         // Compare the two passwords
         // Load hash from your password DB.
         let hashedPassword = user.hashedPassword;
-        bcrypt.compare(password, hashedPassword, function(err, valid) {
+        bcrypt.compare(password, hashedPassword, function (err, valid) {
           if (err) {
             res.status(401).json({
               success: false,
-              message: "Error authenticating. Please contact support."
+              message: "Error authenticating. Please contact support.",
             });
           } else {
             if (valid === true) {
@@ -130,7 +130,7 @@ exports.postUserLogin = function(req, res) {
             } else {
               res.status(201).json({
                 success: false,
-                msg: "email or password is incorrect"
+                msg: "email or password is incorrect",
               });
             }
           }
@@ -141,7 +141,7 @@ exports.postUserLogin = function(req, res) {
 };
 
 // Get user information given a valid token
-exports.getUserRead = function(req, res) {
+exports.getUserRead = function (req, res) {
   // Check for authentication token in x-auth header
   if (!req.headers["x-auth"]) {
     return res.redirect("/");
@@ -157,11 +157,11 @@ exports.getUserRead = function(req, res) {
     let decodedToken = jwt.decode(authToken, secret);
     let userStatus = {};
 
-    UserModel.findOne({ email: decodedToken.email }, function(err, user) {
+    UserModel.findOne({ email: decodedToken.email }, function (err, user) {
       if (err) {
         return res.status(200).json({
           success: false,
-          message: "Error trying to find user. Please contact support"
+          message: "Error trying to find user. Please contact support",
         });
       } else {
         userStatus["success"] = true;
@@ -169,7 +169,10 @@ exports.getUserRead = function(req, res) {
         userStatus["uv_threshold"] = user.UV_threshold;
 
         // Find devices based on decoded token
-        DeviceModel.find({ email: decodedToken.email }, function(err, devices) {
+        DeviceModel.find({ email: decodedToken.email }, function (
+          err,
+          devices
+        ) {
           if (!err) {
             // Construct device list
             let deviceList = [];
@@ -195,11 +198,11 @@ exports.getUserRead = function(req, res) {
 };
 
 // Send the update.html file middleware
-exports.getUserUpdate = function(req, res, next) {
+exports.getUserUpdate = function (req, res, next) {
   res.sendFile(path.join(__dirname, "..", "views", "updateAccount.html"));
 };
 
-exports.postUserUpdate = function(req, res, next) {
+exports.postUserUpdate = function (req, res, next) {
   // Check for authentication token in x-auth header
   if (!req.headers["x-auth"]) {
     return res.redirect("/");
@@ -221,11 +224,11 @@ exports.postUserUpdate = function(req, res, next) {
         { email: decodedToken.email },
         { email: newEmail },
         { useFindAndModify: false },
-        function(err, user) {
+        function (err, user) {
           if (err) {
             return res.status(200).json({
               success: false,
-              message: "Error trying to change email. Please contact support"
+              message: "Error trying to change email. Please contact support",
             });
           } else {
             // Creae new Token with the new updated email
@@ -255,8 +258,8 @@ exports.postUserUpdate = function(req, res, next) {
       let decodedToken = jwt.decode(authToken, secret);
 
       // // Ok to create the user with the given email
-      bcrypt.genSalt(10, function(err, salt) {
-        bcrypt.hash(newPassword, salt, function(err, hash) {
+      bcrypt.genSalt(10, function (err, salt) {
+        bcrypt.hash(newPassword, salt, function (err, hash) {
           if (err) {
             console.log(
               "ops ... something happended while trying to hash password"
@@ -267,19 +270,19 @@ exports.postUserUpdate = function(req, res, next) {
             { email: decodedToken.email },
             { hashedPassword: hash },
             { useFindAndModify: false },
-            function(err, user) {
+            function (err, user) {
               if (err) {
                 let msg = {
                   success: false,
                   message:
-                    "Error trying to change password. Please contact support"
+                    "Error trying to change password. Please contact support",
                 };
 
                 res.status(201).json(msg);
               } else {
                 let msg = {
                   success: true,
-                  message: "Password changed successfully"
+                  message: "Password changed successfully",
                 };
                 res.status(201).json(msg);
               }
@@ -305,19 +308,19 @@ exports.postUserUpdate = function(req, res, next) {
         { email: decodedToken.email },
         { UV_threshold: uv },
         { useFindAndModify: false },
-        function(err, user) {
+        function (err, user) {
           if (err) {
             let msg = {
               success: false,
               message:
-                "Error trying to change uv threshold. Please contact support"
+                "Error trying to change uv threshold. Please contact support",
             };
 
             res.status(201).json(msg);
           } else {
             let msg = {
               success: true,
-              message: "uv threshold changed successfully"
+              message: "uv threshold changed successfully",
             };
             res.status(201).json(msg);
           }
@@ -332,12 +335,12 @@ exports.postUserUpdate = function(req, res, next) {
 };
 
 // Load weather-forecast.html
-exports.getWeatherForecast = function(req, res) {
+exports.getWeatherForecast = function (req, res) {
   res.sendFile(path.join(__dirname, "..", "views", "weather-forecast.html"));
 };
 
 // Get 5 days ahead weather forecast from Open Weather Map API
-exports.getWeatherForecastData = function(req, res) {
+exports.getWeatherForecastData = function (req, res) {
   // Check for authentication token in x-auth header
   if (!req.headers["x-auth"]) {
     return res.redirect("/");
@@ -355,16 +358,20 @@ exports.getWeatherForecastData = function(req, res) {
     ActivityModel.find()
       .sort({ created_at: "desc" })
       .exec()
-      .then(activities => {
-        let mostRecentActivity = activities[0];
-        let lat = mostRecentActivity.dataEverySetInterval[0].latitude;
-        let lon = mostRecentActivity.dataEverySetInterval[0].longitude;
+      .then((activities) => {
+        let lat = 32.2319;
+        let lon = 110.9501;
+        if (activities.length > 0) {
+          let mostRecentActivity = activities[0];
+          lat = mostRecentActivity.dataEverySetInterval[0].latitude;
+          lon = mostRecentActivity.dataEverySetInterval[0].longitude;
+        }
 
         // Fetch the 5 days ahead weather forecast
         let weatherForecastUrl = `https://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&appid=045d7a604186991f3a06dfec6589cee1`;
         fetch(weatherForecastUrl)
-          .then(response => response.json())
-          .then(response => {
+          .then((response) => response.json())
+          .then((response) => {
             // Check response
             console.log(response);
 
@@ -376,11 +383,11 @@ exports.getWeatherForecastData = function(req, res) {
               .status(201)
               .json({ success: true, forecastDays: weatherForecastDays });
           })
-          .catch(error => {
+          .catch((error) => {
             console.log(error);
           });
       })
-      .catch(error => {
+      .catch((error) => {
         console.log(error);
       });
   } catch (ex) {
@@ -390,7 +397,7 @@ exports.getWeatherForecastData = function(req, res) {
   }
 };
 
-exports.getUvForecastData = function(req, res) {
+exports.getUvForecastData = function (req, res) {
   // Check for authentication token in x-auth header
   if (!req.headers["x-auth"]) {
     return res.redirect("/");
@@ -408,25 +415,30 @@ exports.getUvForecastData = function(req, res) {
     ActivityModel.find()
       .sort({ created_at: "desc" })
       .exec()
-      .then(activities => {
-        let mostRecentActivity = activities[0];
-        let lat = mostRecentActivity.dataEverySetInterval[0].latitude;
-        let lon = mostRecentActivity.dataEverySetInterval[0].longitude;
+      .then((activities) => {
+        let lat = 32.2319;
+        let lon = 110.9501;
+        if (activities.length > 0) {
+          let mostRecentActivity = activities[0];
+          lat = mostRecentActivity.dataEverySetInterval[0].latitude;
+          lon = mostRecentActivity.dataEverySetInterval[0].longitude;
+        }
+
         // Fetch the 5 days ahead uv forecast
         let uvForecastUrl = `https://api.openweathermap.org/data/2.5/uvi/forecast?lat=${lat}&lon=${lon}&appid=045d7a604186991f3a06dfec6589cee1&cnt=4`;
         fetch(uvForecastUrl)
-          .then(response => {
+          .then((response) => {
             console.log(response);
             return response.json();
           })
-          .then(response => {
+          .then((response) => {
             console.log("____________________");
             console.log(response);
 
             let uvForecastDays = utilities.getForecastDays(response, "uv");
             res.status(201).json(uvForecastDays);
           })
-          .catch(error => {
+          .catch((error) => {
             console.log(error);
           });
       });
@@ -438,7 +450,7 @@ exports.getUvForecastData = function(req, res) {
 };
 
 // Sometimes at some point in the day, uv forecast won't fetch tomorrow forecast, so we fetch tomorrow forecast separetly
-exports.getTomorrowUvData = function(req, res) {
+exports.getTomorrowUvData = function (req, res) {
   // Check for authentication token in x-auth header
   if (!req.headers["x-auth"]) {
     return res.redirect("/");
@@ -456,19 +468,24 @@ exports.getTomorrowUvData = function(req, res) {
     ActivityModel.find()
       .sort({ created_at: "desc" })
       .exec()
-      .then(activities => {
-        let mostRecentActivity = activities[0];
-        let lat = mostRecentActivity.dataEverySetInterval[0].latitude;
-        let lon = mostRecentActivity.dataEverySetInterval[0].longitude;
+      .then((activities) => {
+        let lat = 32.2319;
+        let lon = 110.9501;
+        if (activities.length > 0) {
+          let mostRecentActivity = activities[0];
+          lat = mostRecentActivity.dataEverySetInterval[0].latitude;
+          lon = mostRecentActivity.dataEverySetInterval[0].longitude;
+        }
+
         // Fetch the 5 days ahead uv forecast
         let uvForecastUrl = `https://api.openweathermap.org/data/2.5/uvi?lat=${lat}&lon=${lon}&appid=045d7a604186991f3a06dfec6589cee1&cnt=4`;
         fetch(uvForecastUrl)
-          .then(response => response.json())
-          .then(response => {
+          .then((response) => response.json())
+          .then((response) => {
             let uvForecastDay = utilities.getForecastDays([response], "uv");
             res.status(201).json({ success: true, message: uvForecastDay });
           })
-          .catch(error => {
+          .catch((error) => {
             console.log(error);
           });
       });
@@ -480,27 +497,27 @@ exports.getTomorrowUvData = function(req, res) {
 };
 
 // Load activities-summary.html
-exports.getActivitiesSummary = function(req, res) {
+exports.getActivitiesSummary = function (req, res) {
   res.sendFile(path.join(__dirname, "..", "views", "activities-summary.html"));
 };
 
 // Load activity-detail.html
-exports.getActivityDetail = function(req, res) {
+exports.getActivityDetail = function (req, res) {
   res.sendFile(path.join(__dirname, "..", "views", "activity-detail.html"));
 };
 
 // Load weekly-summary.html
-exports.getWeeklySummary = function(req, res) {
+exports.getWeeklySummary = function (req, res) {
   res.sendFile(path.join(__dirname, "..", "views", "weekly-summary.html"));
 };
 
 // Get UV Threshold
-exports.getUvThreshold = function(req, res) {
+exports.getUvThreshold = function (req, res) {
   if (
     req.body.hasOwnProperty("apiKey") &&
     req.body.hasOwnProperty("deviceId")
   ) {
-    DeviceModel.findOne({ deviceId: req.body.deviceId }, function(
+    DeviceModel.findOne({ deviceId: req.body.deviceId }, function (
       error,
       device
     ) {
@@ -509,7 +526,7 @@ exports.getUvThreshold = function(req, res) {
       } else {
         let email = device.email;
 
-        UserModel.findOne({ email: email }, function(error, user) {
+        UserModel.findOne({ email: email }, function (error, user) {
           if (error) {
             console.log(error);
           } else {
@@ -524,7 +541,7 @@ exports.getUvThreshold = function(req, res) {
     res.status(401).json({
       success: false,
       msg: "invalid object format",
-      correctFormat: { apiKey: "API KEY VALUE", deviceId: "DEVICE ID VALUE" }
+      correctFormat: { apiKey: "API KEY VALUE", deviceId: "DEVICE ID VALUE" },
     });
   }
 };
