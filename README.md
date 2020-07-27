@@ -26,4 +26,4 @@ Database:
 
 - The app uses mongodb database
 
-- To run the app, first create a jwtSecretKey.txt with a random key for json web token (JWT) in a director above the app's directory. Then you can run the app on your local machine!
+- To run the app, first create a jwtSecretKey.txt with a random key for json web token (JWT) in a director above the app's root directory. Then you can run the app on your local machine!
