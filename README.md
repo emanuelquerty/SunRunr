@@ -12,7 +12,7 @@ SunRunr Project Overview
 
 # Live app url
 
-- url: http://ec2-18-224-200-150.us-east-2.compute.amazonaws.com:3000/
+- url: http://ec2-18-224-200-150.us-east-2.compute.amazonaws.com:3000/ (not live at this time)
 
 - Existing User Credentials
 
