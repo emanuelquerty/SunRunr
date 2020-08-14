@@ -7,7 +7,7 @@ let jwt = require("jwt-simple");
 
 /*************** Route for creating an activity */
 
-exports.postActivityCreate = function(req, res, next) {
+exports.postActivityCreate = function (req, res, next) {
   let data = req.body;
   if (
     data.hasOwnProperty("dataEverySetInterval") &&
@@ -17,23 +17,23 @@ exports.postActivityCreate = function(req, res, next) {
     data.hasOwnProperty("apiKey")
   ) {
     DeviceModel.findOne({ deviceId: data.deviceId, apiKey: data.apiKey })
-      .then(device => {
+      .then((device) => {
         if (!device) {
           return res.status(201).json({
             success: false,
-            msg: "Device Not Registered or Wrong API KEY"
+            msg: "Device Not Registered or Wrong API KEY",
           });
         }
 
         /** TODO: do the work to construct the activity model */
         activityUtilities.constructAndSaveActivityModel(data, res);
       })
-      .catch(error => {
+      .catch((error) => {
         console.log(error);
         res.status(401).json({
           success: false,
           msg:
-            "Something happened while looking for the device. Please contact support."
+            "Something happened while looking for the device. Please contact support.",
         });
       });
   } else {
@@ -47,19 +47,19 @@ exports.postActivityCreate = function(req, res, next) {
             lon: "longitude",
             lat: "latitude",
             GPS_speed: "GPS speed",
-            uv: "ultra violet Index"
-          }
+            uv: "ultra violet Index",
+          },
         ],
         uv_exposure: "Sum of uv for each 15 second",
         activityDuration: "Duration of entire activity",
         deviceId: "device id",
-        apiKey: "api key"
-      }
+        apiKey: "api key",
+      },
     });
   }
 };
 
-exports.getActivitiesRead = function(req, res) {
+exports.getActivitiesRead = function (req, res) {
   // Check for authentication token in x-auth header
   if (!req.headers["x-auth"]) {
     return res.redirect("/");
@@ -77,7 +77,7 @@ exports.getActivitiesRead = function(req, res) {
     // Get all activities for this user
     ActivityModel.find({ email: decodedToken.email })
       .sort({ created_at: -1 })
-      .exec(function(error, activities) {
+      .exec(function (error, activities) {
         if (error) {
           console.log(error);
         } else {
@@ -91,26 +91,18 @@ exports.getActivitiesRead = function(req, res) {
   }
 };
 
-exports.getActivityRead = function(req, res) {
+exports.getActivityRead = function (req, res) {
   // Check for authentication token in x-auth header
   if (!req.headers["x-auth"]) {
     return res.redirect("/");
   }
-  // Authenticatin token is set
-  var authToken = req.headers["x-auth"];
-  //   console.log(authToken);
 
   try {
-    let secret = fs
-      .readFileSync(path.join(__dirname, "..", "..", "jwtSecretkey.txt"))
-      .toString();
-    let decodedToken = jwt.decode(authToken, secret);
-
     // Get the activity created_At
     let created_at = req.params.created_at;
 
     // Get all activities for this user
-    ActivityModel.findOne({ created_at: created_at }, function(
+    ActivityModel.findOne({ created_at: created_at }, function (
       error,
       activity
     ) {
@@ -128,7 +120,7 @@ exports.getActivityRead = function(req, res) {
 };
 
 // Change Activity Type
-exports.changeActivityType = function(req, res) {
+exports.changeActivityType = function (req, res) {
   // Check for authentication token in x-auth header
   if (!req.headers["x-auth"]) {
     return res.redirect("/");
@@ -169,14 +161,14 @@ exports.changeActivityType = function(req, res) {
         { created_at: created_at },
         { activityType, caloriesBurned },
         { useFindAndModify: false },
-        function(err, activity) {
+        function (err, activity) {
           if (err) {
             console.log(err);
           } else {
             res.status(201).json({
               success: true,
               msg: "Changed Activity Type Successfull",
-              data: { activityType, caloriesBurned }
+              data: { activityType, caloriesBurned },
             });
           }
         }
